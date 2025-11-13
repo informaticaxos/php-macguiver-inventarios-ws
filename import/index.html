@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar Excel - Ferco Files WS</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            border-right: 1px solid #495057;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+        .sidebar .nav-link:hover {
+            color: #fff;
+        }
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: #495057;
+            border-left: 3px solid #007bff;
+        }
+        .content {
+            background-color: #f8f9fa;
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+        .header {
+            background-color: #343a40;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 20px;
+            color: #fff;
+        }
+        .header .logo {
+            height: 50px;
+        }
+        .header .company-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .header .logout-btn {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .header .logout-btn:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        @media (max-width: 767.98px) {
+            .header .company-name {
+                font-size: 1.2rem;
+            }
+        }
+        .btn-xs {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        .table {
+            font-size: 0.875rem;
+        }
+        .table th {
+            text-align: center;
+            background-color: #495057;
+            color: #fff;
+            border-color: #6c757d;
+            font-weight: 600;
+            padding: 0.75rem;
+        }
+        .table td {
+            text-align: left;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .table thead th {
+            border-bottom: 2px solid #dee2e6;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background-color: #f8f9fa;
+            transition: border-color 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #007bff;
+        }
+        .upload-area.dragover {
+            border-color: #007bff;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="https://fercoadvancededucation.com/data/logo%20ferco%20normal.png" alt="Logo Ferco" class="logo me-3">
+                <span class="company-name">Ferco Advanced Education</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span id="userName" class="me-3 text-white">Usuario</span>
+                <button id="logoutBtn" class="btn logout-btn btn-sm me-2" title="Cerrar Sesión">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+                <!-- Mobile menu toggle -->
+                <button class="btn btn-outline-secondary btn-xs d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar for desktop -->
+            <nav class="col-md-2 d-none d-md-block sidebar">
+                <div class="sidebar-sticky">
+                    <h5 class="text-white p-3">Dashboard</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-section="import">
+                                <i class="fas fa-upload"></i> Importar Excel
+                            </a>
+                        </li>
+                        <!-- Add more menu items here if needed -->
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Offcanvas sidebar for mobile -->
+            <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="sidebarLabel">Dashboard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-section="import">
+                                <i class="fas fa-upload"></i> Importar Excel
+                            </a>
+                        </li>
+                        <!-- Add more menu items here if needed -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-10 ms-sm-auto px-md-4 content">
+                <div id="content-area">
+                    <h1>Importar Archivo Excel</h1>
+                    <p>Selecciona un archivo Excel para cargar y visualizar los datos en una tabla.</p>
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5>Arrastra y suelta un archivo Excel aquí</h5>
+                        <p class="text-muted">o</p>
+                        <input type="file" id="fileInput" accept=".xlsx,.xls" class="d-none">
+                        <button class="btn btn-primary" id="selectFileBtn">Seleccionar Archivo</button>
+                    </div>
+                    <div id="tableContainer" class="mt-4" style="display: none;">
+                        <h3>Datos del Excel</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="excelTable"></table>
+                        </div>
+                        <button class="btn btn-success mt-3" id="processBtn">Procesar Datos</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SheetJS for Excel reading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Check if logged in (similar to frontend)
+            if (localStorage.getItem('loggedIn') !== 'true') {
+                window.location.href = '../frontend/login.html';
+                return;
+            }
+
+            var excelData = [];
+
+            // Handle sidebar navigation
+            $('.sidebar .nav-link, .offcanvas .nav-link').click(function(e) {
+                e.preventDefault();
+                $('.sidebar .nav-link, .offcanvas .nav-link').removeClass('active');
+                $(this).addClass('active');
+                var section = $(this).data('section');
+                // For now, only import section
+                // Close offcanvas on mobile
+                $('#sidebar').offcanvas('hide');
+            });
+
+            // Display user name
+            var userName = localStorage.getItem('user');
+            if (userName) {
+                $('#userName').text('Bienvenido, ' + userName);
+            }
+
+            // Logout functionality
+            $('#logoutBtn').click(function() {
+                Swal.fire({
+                    title: '¿Cerrar sesión?',
+                    text: '¿Estás seguro de que quieres cerrar sesión?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, cerrar sesión',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.removeItem('loggedIn');
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('userId');
+                        window.location.href = '../frontend/login.html';
+                    }
+                });
+            });
+
+            // File input handling
+            $('#selectFileBtn').click(function() {
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').change(function(e) {
+                handleFile(e.target.files[0]);
+            });
+
+            // Drag and drop
+            $('#uploadArea').on('dragover', function(e) {
+                e.preventDefault();
+                $(this).addClass('dragover');
+            });
+
+            $('#uploadArea').on('dragleave', function(e) {
+                e.preventDefault();
+                $(this).removeClass('dragover');
+            });
+
+            $('#uploadArea').on('drop', function(e) {
+                e.preventDefault();
+                $(this).removeClass('dragover');
+                var files = e.originalEvent.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                if (!file) return;
+                if (!file.name.match(/\.(xlsx|xls)$/)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Archivo inválido',
+                        text: 'Por favor, selecciona un archivo Excel (.xlsx o .xls).'
+                    });
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, {type: 'array'});
+                    var sheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[sheetName];
+                    excelData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+                    if (excelData.length === 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Archivo vacío',
+                            text: 'El archivo Excel no contiene datos.'
+                        });
+                        return;
+                    }
+
+                    renderTable(excelData);
+                    $('#tableContainer').show();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Archivo cargado',
+                        text: 'Los datos se han cargado correctamente.'
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
+            function renderTable(data) {
+                var table = '<thead><tr>';
+                // Assume first row is headers
+                data[0].forEach(function(header) {
+                    table += '<th>' + (header || '') + '</th>';
+                });
+                table += '</tr></thead><tbody>';
+                for (var i = 1; i < data.length; i++) {
+                    table += '<tr>';
+                    data[i].forEach(function(cell) {
+                        table += '<td>' + (cell || '') + '</td>';
+                    });
+                    table += '</tr>';
+                }
+                table += '</tbody>';
+                $('#excelTable').html(table);
+            }
+
+            // Process button (placeholder for backend integration)
+            $('#processBtn').click(function() {
+                // Here you can send excelData to backend via AJAX
+                // For now, just show a success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Procesado',
+                    text: 'Los datos han sido procesados (integración con backend pendiente).'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
