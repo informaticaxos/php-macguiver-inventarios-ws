@@ -49,7 +49,7 @@ class ProductService
     public function createProduct($data)
     {
         // Validación básica (puede expandirse)
-        if (empty($data['name']) || empty($data['code'])) {
+        if (empty($data['code'])) {
             return null; // Error de validación
         }
 
@@ -58,7 +58,7 @@ class ProductService
             return null; // Code ya existe
         }
 
-        $product = new Product(null, $data['name'], $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0.0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code']);
+        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0.0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code']);
         $this->repository->save($product);
         return $product;
     }
@@ -78,7 +78,7 @@ class ProductService
         }
 
         // Validación básica
-        if (empty($data['name']) || empty($data['code'])) {
+        if (empty($data['code'])) {
             return null;
         }
 
@@ -88,7 +88,7 @@ class ProductService
             return null; // Code ya existe en otro producto
         }
 
-        $product = new Product($id, $data['name'], $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code']);
+        $product = new Product($id, $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code']);
         $this->repository->save($product);
         return $product;
     }

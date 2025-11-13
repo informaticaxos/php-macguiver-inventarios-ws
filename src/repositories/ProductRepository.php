@@ -65,9 +65,8 @@ class ProductRepository
     {
         if ($product->getIdProduct()) {
             // Actualizar
-            $stmt = $this->pdo->prepare("UPDATE products SET name = ?, brand = ?, description = ?, stock = ?, cost = ?, pvp = ?, min = ?, code = ? WHERE id_product = ?");
+            $stmt = $this->pdo->prepare("UPDATE products SET brand = ?, description = ?, stock = ?, cost = ?, pvp = ?, min = ?, code = ? WHERE id_product = ?");
             $stmt->execute([
-                $product->getName(),
                 $product->getBrand(),
                 $product->getDescription(),
                 $product->getStock(),
@@ -79,9 +78,8 @@ class ProductRepository
             ]);
         } else {
             // Insertar
-            $stmt = $this->pdo->prepare("INSERT INTO products (name, brand, description, stock, cost, pvp, min, code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
-                $product->getName(),
                 $product->getBrand(),
                 $product->getDescription(),
                 $product->getStock(),

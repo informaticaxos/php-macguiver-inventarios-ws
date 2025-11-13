@@ -7,7 +7,6 @@
 class Product
 {
     private $id_product;
-    private $name;
     private $brand;
     private $description;
     private $stock;
@@ -20,7 +19,6 @@ class Product
      * Constructor de la clase Product
      *
      * @param int|null $id_product
-     * @param string $name
      * @param string $brand
      * @param string $description
      * @param float $stock
@@ -29,10 +27,9 @@ class Product
      * @param int $min
      * @param string $code
      */
-    public function __construct($id_product = null, $name = '', $brand = '', $description = '', $stock = 0.0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '')
+    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0.0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '')
     {
         $this->id_product = $id_product;
-        $this->name = $name;
         $this->brand = $brand;
         $this->description = $description;
         $this->stock = $stock;
@@ -48,10 +45,7 @@ class Product
         return $this->id_product;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
+
 
     public function getBrand()
     {
@@ -94,10 +88,7 @@ class Product
         $this->id_product = $id_product;
     }
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+
 
     public function setBrand($brand)
     {
@@ -143,7 +134,6 @@ class Product
     {
         return [
             'id_product' => $this->id_product,
-            'name' => $this->name,
             'brand' => $this->brand,
             'description' => $this->description,
             'stock' => $this->stock,
