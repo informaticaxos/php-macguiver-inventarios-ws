@@ -181,10 +181,18 @@
                     </div>
                     <div id="tableContainer" class="mt-4" style="display: none;">
                         <h3>Datos del Excel</h3>
+                        <div class="mb-3">
+                            <span id="recordCount" class="badge bg-primary fs-6">Total registros: 0</span>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="excelTable"></table>
                         </div>
-                        <button class="btn btn-success mt-3" id="processBtn">Procesar Datos</button>
+                        <div class="mt-3">
+                            <button class="btn btn-success" id="processBtn">Procesar Datos</button>
+                            <div class="progress mt-2" id="progressContainer" style="display: none;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -283,14 +291,17 @@
             }
 
             function renderTable(data) {
-                var table = '<thead><tr>';
+                var recordCount = data.length - 1; // Subtract header row
+                $('#recordCount').text('Total registros: ' + recordCount);
+
+                var table = '<thead><tr><th>#</th>';
                 // Assume first row is headers
                 data[0].forEach(function(header) {
                     table += '<th>' + (header || '') + '</th>';
                 });
                 table += '</tr></thead><tbody>';
                 for (var i = 1; i < data.length; i++) {
-                    table += '<tr>';
+                    table += '<tr><td>' + i + '</td>';
                     data[i].forEach(function(cell) {
                         table += '<td>' + (cell || '') + '</td>';
                     });
@@ -302,13 +313,26 @@
 
             // Process button (placeholder for backend integration)
             $('#processBtn').click(function() {
-                // Here you can send excelData to backend via AJAX
-                // For now, just show a success message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Procesado',
-                    text: 'Los datos han sido procesados (integración con backend pendiente).'
-                });
+                $('#progressContainer').show();
+                $('#progressBar').css('width', '0%');
+
+                // Simulate progress
+                var progress = 0;
+                var interval = setInterval(function() {
+                    progress += 10;
+                    $('#progressBar').css('width', progress + '%');
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        $('#progressContainer').hide();
+                        // Here you can send excelData to backend via AJAX
+                        // For now, just show a success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Procesado',
+                            text: 'Los datos han sido procesados (integración con backend pendiente).'
+                        });
+                    }
+                }, 200);
             });
         });
     </script>
