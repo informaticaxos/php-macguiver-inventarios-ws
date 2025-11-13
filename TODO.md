@@ -10,7 +10,7 @@
   - Repositories: CountriesRepository.php, FilesRepository.php, FormRepository.php
   - Routes: CountriesRoute.php, FilesRoute.php, FormRoute.php
   - Services: CountriesService.php, FilesService.php, FormService.php
-- No index.php found in root (referenced in .htaccess), so no router includes to update.
+- index.php updated to only include UserRoute and UserController.
 - Dependencies: Form module references Files (delete form and associated files), but since both are removed, no issue.
 
 ## Plan
@@ -22,8 +22,7 @@
 - Verify no remaining references in user-related files.
 
 ## Dependent Files to be edited
-- None (deleting files only).
+- index.php: Updated to remove includes for Form, Files, Countries routes and controllers.
 
 ## Followup steps
 - Test the application to ensure users functionality works.
-- If index.php exists or is created, ensure only UserRoute is included.

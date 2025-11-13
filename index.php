@@ -3,23 +3,11 @@
 // Punto de entrada de la aplicación API-REST
 // Incluye las rutas y despacha las solicitudes
 
-require_once 'src/routes/FormRoute.php';
-$formRoutes = $routes;
-
-require_once 'src/routes/FilesRoute.php';
-$filesRoutes = $routes;
-
-require_once 'src/routes/CountriesRoute.php';
-$countriesRoutes = $routes;
-
 require_once 'src/routes/UserRoute.php';
 $userRoutes = $routes;
 
-$routes = array_merge($formRoutes, $filesRoutes, $countriesRoutes, $userRoutes);
+$routes = $userRoutes;
 
-require_once 'src/controllers/FormController.php';
-require_once 'src/controllers/FilesController.php';
-require_once 'src/controllers/CountriesController.php';
 require_once 'src/controllers/UserController.php';
 
 // Función para obtener el método y path de la solicitud
