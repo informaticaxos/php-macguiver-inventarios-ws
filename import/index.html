@@ -188,6 +188,7 @@
                             <table class="table table-striped" id="excelTable"></table>
                         </div>
                         <div class="mt-3">
+                            <button class="btn btn-primary me-2" id="importBtn">Importar a Base de Datos</button>
                             <button class="btn btn-success" id="processBtn">Procesar Datos</button>
                             <div class="progress mt-2" id="progressContainer" style="display: none;">
                                 <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar"></div>
@@ -316,6 +317,52 @@
                 table += '</tbody>';
                 $('#excelTable').html(table);
             }
+
+            // Import button
+            $('#importBtn').click(function() {
+                $('#progressContainer').show();
+                $('#progressBar').css('width', '0%');
+
+                // AJAX call to import endpoint
+                $.ajax({
+                    url: 'https://nestorcornejo.com/macguiver-inventarios/products/import',
+                    type: 'GET',
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.addEventListener("progress", function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                $('#progressBar').css('width', (percentComplete * 100) + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        $('#progressContainer').hide();
+                        if (response.status == 1) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Importación completada',
+                                text: 'Se importaron ' + response.data.imported + ' de ' + response.data.total + ' productos.'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error en la importación',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#progressContainer').hide();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al conectar con el servidor: ' + error
+                        });
+                    }
+                });
+            });
 
             // Process button (placeholder for backend integration)
             $('#processBtn').click(function() {

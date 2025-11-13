@@ -94,6 +94,69 @@ class ProductService
     }
 
     /**
+     * Importa productos desde el archivo JSON
+     *
+     * @return array
+     */
+    public function importProducts()
+    {
+        $filePath = __DIR__ . '/../../files/plantilla_precios.json';
+        if (!file_exists($filePath)) {
+            return ['success' => false, 'message' => 'File not found'];
+        }
+
+        $jsonContent = file_get_contents($filePath);
+        $data = json_decode($jsonContent, true);
+        if (!$data || !isset($data['products'])) {
+            return ['success' => false, 'message' => 'Invalid JSON structure'];
+        }
+
+        $products = $data['products'];
+        $imported = 0;
+        $errors = [];
+
+        foreach ($products as $productData) {
+            try {
+                // Validar datos básicos
+                if (empty($productData['code'])) {
+                    $errors[] = 'Missing code for product';
+                    continue;
+                }
+
+                // Verificar si ya existe
+                if ($this->repository->findByCode($productData['code'])) {
+                    // Skip existing products
+                    continue;
+                }
+
+                // Crear producto
+                $product = new Product(
+                    null,
+                    $productData['brand'] ?? '',
+                    $productData['description'] ?? '',
+                    $productData['stock'] ?? 0,
+                    $productData['cost'] ?? 0,
+                    $productData['pvp'] ?? 0,
+                    $productData['min'] ?? 0,
+                    $productData['code']
+                );
+
+                $this->repository->save($product);
+                $imported++;
+            } catch (Exception $e) {
+                $errors[] = 'Error importing product ' . ($productData['code'] ?? 'unknown') . ': ' . $e->getMessage();
+            }
+        }
+
+        return [
+            'success' => true,
+            'imported' => $imported,
+            'errors' => $errors,
+            'total' => count($products)
+        ];
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

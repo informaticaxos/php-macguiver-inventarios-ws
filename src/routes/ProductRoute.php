@@ -31,6 +31,8 @@ class ProductRoute
         } elseif (preg_match('/^\/products\/(\d+)$/', $path, $matches) && $method === 'GET') {
             $id = $matches[1];
             $this->controller->getById($id);
+        } elseif ($path === '/products/import' && $method === 'GET') {
+            $this->controller->import();
         } elseif ($path === '/products' && $method === 'POST') {
             $this->controller->create();
         } elseif (preg_match('/^\/products\/(\d+)$/', $path, $matches) && $method === 'PUT') {

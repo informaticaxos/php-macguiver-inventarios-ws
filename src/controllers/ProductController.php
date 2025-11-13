@@ -85,6 +85,19 @@ class ProductController
     }
 
     /**
+     * Importa productos desde el archivo JSON
+     */
+    public function import()
+    {
+        $result = $this->service->importProducts();
+        if ($result['success']) {
+            $this->sendResponse(200, 1, 'Products imported successfully', $result);
+        } else {
+            $this->sendResponse(500, 0, 'Import failed: ' . $result['message'], null);
+        }
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id
