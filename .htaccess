@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [QSA,L]
+
+# Permitir PUT y DELETE requests
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} ^(PUT|DELETE)$
+    RewriteRule .* - [E=HTTP_%{REQUEST_METHOD}:1]
+</IfModule>
