@@ -6,9 +6,13 @@
 require_once 'src/routes/UserRoute.php';
 $userRoutes = $routes;
 
+require_once 'src/routes/ProductRoute.php';
+$productRoutes = new ProductRoute();
+
 $routes = $userRoutes;
 
 require_once 'src/controllers/UserController.php';
+require_once 'src/controllers/ProductController.php';
 
 // Función para obtener el método y path de la solicitud
 function getRequestMethodAndPath()
@@ -42,6 +46,12 @@ function matchRoute($routes, $method, $path)
 
 // Obtener método y path de la solicitud
 list($method, $path) = getRequestMethodAndPath();
+
+// Verificar rutas de productos primero
+if (strpos($path, '/products') === 0) {
+    $productRoutes->handle($method, $path);
+    exit;
+}
 
 // Hacer match con las rutas definidas
 $match = matchRoute($routes, $method, $path);
