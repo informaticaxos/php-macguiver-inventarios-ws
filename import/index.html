@@ -124,10 +124,6 @@
                 <span class="company-name">Ferco Advanced Education</span>
             </div>
             <div class="d-flex align-items-center">
-                <span id="userName" class="me-3 text-white">Usuario</span>
-                <button id="logoutBtn" class="btn logout-btn btn-sm me-2" title="Cerrar Sesión">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </button>
                 <!-- Mobile menu toggle -->
                 <button class="btn btn-outline-secondary btn-xs d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
                     <i class="fas fa-bars"></i>
@@ -205,12 +201,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Check if logged in (similar to frontend)
-            if (localStorage.getItem('loggedIn') !== 'true') {
-                window.location.href = '../frontend/login.html';
-                return;
-            }
-
             var excelData = [];
 
             // Handle sidebar navigation
@@ -222,33 +212,6 @@
                 // For now, only import section
                 // Close offcanvas on mobile
                 $('#sidebar').offcanvas('hide');
-            });
-
-            // Display user name
-            var userName = localStorage.getItem('user');
-            if (userName) {
-                $('#userName').text('Bienvenido, ' + userName);
-            }
-
-            // Logout functionality
-            $('#logoutBtn').click(function() {
-                Swal.fire({
-                    title: '¿Cerrar sesión?',
-                    text: '¿Estás seguro de que quieres cerrar sesión?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Sí, cerrar sesión',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        localStorage.removeItem('loggedIn');
-                        localStorage.removeItem('user');
-                        localStorage.removeItem('userId');
-                        window.location.href = '../frontend/login.html';
-                    }
-                });
             });
 
             // File input handling
