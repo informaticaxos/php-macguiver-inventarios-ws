@@ -303,7 +303,13 @@
                 for (var i = 1; i < data.length; i++) {
                     table += '<tr><td>' + i + '</td>';
                     data[i].forEach(function(cell) {
-                        table += '<td>' + (cell || '') + '</td>';
+                        var formattedCell = cell;
+                        if (cell === null || cell === undefined || cell === '') {
+                            formattedCell = '0';
+                        } else if (!isNaN(parseFloat(cell))) {
+                            formattedCell = parseFloat(cell).toFixed(2);
+                        }
+                        table += '<td>' + formattedCell + '</td>';
                     });
                     table += '</tr>';
                 }
