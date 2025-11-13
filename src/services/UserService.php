@@ -49,19 +49,19 @@ class UserService
     public function createUser($data)
     {
         // Validación básica (puede expandirse)
-        if (empty($data['name']) || empty($data['email']) || empty($data['password'])) {
+        if (empty($data['fullname']) || empty($data['username']) || empty($data['password'])) {
             return null; // Error de validación
         }
 
-        // Verificar si el email ya existe
-        if ($this->repository->findByEmail($data['email'])) {
-            return null; // Email ya existe
+        // Verificar si el username ya existe
+        if ($this->repository->findByUsername($data['username'])) {
+            return null; // Username ya existe
         }
 
         // Hash de la contraseña
         $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        $user = new User(null, $data['name'], $data['email'], $hashedPassword, $data['state'] ?? '1');
+        $user = new User(null, $data['fullname'], $data['username'], $hashedPassword, $data['state'] ?? 1, $data['rol'] ?? null);
         $this->repository->save($user);
         return $user;
     }
@@ -81,19 +81,19 @@ class UserService
         }
 
         // Validación básica
-        if (empty($data['name']) || empty($data['email'])) {
+        if (empty($data['fullname']) || empty($data['username'])) {
             return null;
         }
 
-        // Verificar si el email ya existe en otro usuario
-        $existingEmail = $this->repository->findByEmail($data['email']);
-        if ($existingEmail && $existingEmail['id_user'] != $id) {
-            return null; // Email ya existe en otro usuario
+        // Verificar si el username ya existe en otro usuario
+        $existingUsername = $this->repository->findByUsername($data['username']);
+        if ($existingUsername && $existingUsername['id_user'] != $id) {
+            return null; // Username ya existe en otro usuario
         }
 
         $hashedPassword = isset($data['password']) && !empty($data['password']) ? password_hash($data['password'], PASSWORD_DEFAULT) : $existing['password'];
 
-        $user = new User($id, $data['name'], $data['email'], $hashedPassword, $data['state'] ?? $existing['state']);
+        $user = new User($id, $data['fullname'], $data['username'], $hashedPassword, $data['state'] ?? $existing['state'], $data['rol'] ?? $existing['rol']);
         $this->repository->save($user);
         return $user;
     }
@@ -102,7 +102,7 @@ class UserService
      * Actualiza el estado de un user
      *
      * @param int $id
-     * @param string $state
+     * @param int $state
      * @return User|null
      */
     public function updateUserState($id, $state)
@@ -112,7 +112,7 @@ class UserService
             return null;
         }
 
-        $user = new User($id, $existing['name'], $existing['email'], $existing['password'], $state);
+        $user = new User($id, $existing['fullname'], $existing['username'], $existing['password'], $state, $existing['rol']);
         $this->repository->save($user);
         return $user;
     }
@@ -156,7 +156,7 @@ class UserService
         // Hash de la contraseña
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $user = new User($id, $existing['name'], $existing['email'], $hashedPassword, $existing['state']);
+        $user = new User($id, $existing['fullname'], $existing['username'], $hashedPassword, $existing['state'], $existing['rol']);
         $this->repository->save($user);
         return $user;
     }
@@ -164,13 +164,13 @@ class UserService
     /**
      * Login de usuario
      *
-     * @param string $email
+     * @param string $username
      * @param string $password
      * @return array|null
      */
-    public function login($email, $password)
+    public function login($username, $password)
     {
-        $user = $this->repository->findByEmail($email);
+        $user = $this->repository->findByUsername($username);
         if (!$user) {
             return null; // Usuario no encontrado
         }

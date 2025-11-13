@@ -60,7 +60,7 @@ class UserController
             unset($response['password']); // No devolver contraseña
             $this->sendResponse(201, 1, 'User created successfully', $response);
         } else {
-            $this->sendResponse(400, 0, 'Validation error or email already exists', null);
+            $this->sendResponse(400, 0, 'Validation error or username already exists', null);
         }
     }
 
@@ -154,12 +154,12 @@ class UserController
     public function login()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        if (!$data || !isset($data['email']) || !isset($data['password'])) {
-            $this->sendResponse(400, 0, 'Invalid JSON data or missing email/password', null);
+        if (!$data || !isset($data['username']) || !isset($data['password'])) {
+            $this->sendResponse(400, 0, 'Invalid JSON data or missing username/password', null);
             return;
         }
 
-        $user = $this->service->login($data['email'], $data['password']);
+        $user = $this->service->login($data['username'], $data['password']);
         if ($user) {
             $this->sendResponse(200, 1, 'Login successful', $user);
         } else {

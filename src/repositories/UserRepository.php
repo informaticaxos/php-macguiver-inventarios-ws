@@ -44,15 +44,15 @@ class UserRepository
     }
 
     /**
-     * Obtiene un user por email
+     * Obtiene un user por username
      *
-     * @param string $email
+     * @param string $username
      * @return array|null
      */
-    public function findByEmail($email)
+    public function findByUsername($username)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -65,22 +65,24 @@ class UserRepository
     {
         if ($user->getIdUser()) {
             // Actualizar
-            $stmt = $this->pdo->prepare("UPDATE users SET name = ?, email = ?, password = ?, state = ? WHERE id_user = ?");
+            $stmt = $this->pdo->prepare("UPDATE users SET fullname = ?, username = ?, password = ?, state = ?, rol = ? WHERE id_user = ?");
             $stmt->execute([
-                $user->getName(),
-                $user->getEmail(),
+                $user->getFullname(),
+                $user->getUsername(),
                 $user->getPassword(),
                 $user->getState(),
+                $user->getRol(),
                 $user->getIdUser()
             ]);
         } else {
             // Insertar
-            $stmt = $this->pdo->prepare("INSERT INTO users (name, email, password, state) VALUES (?, ?, ?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO users (fullname, username, password, state, rol) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([
-                $user->getName(),
-                $user->getEmail(),
+                $user->getFullname(),
+                $user->getUsername(),
                 $user->getPassword(),
-                $user->getState()
+                $user->getState(),
+                $user->getRol()
             ]);
             $user->setIdUser($this->pdo->lastInsertId());
         }

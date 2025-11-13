@@ -2,32 +2,35 @@
 
 /**
  * Modelo para la tabla users
- * Representa una entidad básica con campos: id_user, name, email, password, state
+ * Representa una entidad básica con campos: id_user, fullname, username, password, state, rol
  */
 class User
 {
     private $id_user;
-    private $name;
-    private $email;
+    private $fullname;
+    private $username;
     private $password;
     private $state;
+    private $rol;
 
     /**
      * Constructor de la clase User
      *
      * @param int|null $id_user
-     * @param string $name
-     * @param string $email
+     * @param string $fullname
+     * @param string $username
      * @param string $password
-     * @param string $state
+     * @param int $state
+     * @param int|null $rol
      */
-    public function __construct($id_user = null, $name = '', $email = '', $password = '', $state = '1')
+    public function __construct($id_user = null, $fullname = '', $username = '', $password = '', $state = 1, $rol = null)
     {
         $this->id_user = $id_user;
-        $this->name = $name;
-        $this->email = $email;
+        $this->fullname = $fullname;
+        $this->username = $username;
         $this->password = $password;
         $this->state = $state;
+        $this->rol = $rol;
     }
 
     // Getters
@@ -36,14 +39,14 @@ class User
         return $this->id_user;
     }
 
-    public function getName()
+    public function getFullname()
     {
-        return $this->name;
+        return $this->fullname;
     }
 
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->email;
+        return $this->username;
     }
 
     public function getPassword()
@@ -56,20 +59,25 @@ class User
         return $this->state;
     }
 
+    public function getRol()
+    {
+        return $this->rol;
+    }
+
     // Setters
     public function setIdUser($id_user)
     {
         $this->id_user = $id_user;
     }
 
-    public function setName($name)
+    public function setFullname($fullname)
     {
-        $this->name = $name;
+        $this->fullname = $fullname;
     }
 
-    public function setEmail($email)
+    public function setUsername($username)
     {
-        $this->email = $email;
+        $this->username = $username;
     }
 
     public function setPassword($password)
@@ -82,6 +90,11 @@ class User
         $this->state = $state;
     }
 
+    public function setRol($rol)
+    {
+        $this->rol = $rol;
+    }
+
     /**
      * Método para convertir el objeto a array (útil para JSON responses)
      *
@@ -91,10 +104,11 @@ class User
     {
         return [
             'id_user' => $this->id_user,
-            'name' => $this->name,
-            'email' => $this->email,
+            'fullname' => $this->fullname,
+            'username' => $this->username,
             'password' => $this->password,
             'state' => $this->state,
+            'rol' => $this->rol,
         ];
     }
 }
