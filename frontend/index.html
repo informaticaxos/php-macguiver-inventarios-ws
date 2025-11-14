@@ -145,10 +145,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-section="pagos">
-                                <i class="fas fa-credit-card"></i> PAGOS
+                                <i class="fas fa-credit-card"></i> Pagos
                             </a>
                         </li>
-                        <!-- Add more menu items here if needed -->
                     </ul>
                 </div>
             </nav>
@@ -178,10 +177,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-section="pagos">
-                                <i class="fas fa-credit-card"></i> PAGOS
+                                <i class="fas fa-credit-card"></i> Pagos
                             </a>
                         </li>
-                        <!-- Add more menu items here if needed -->
                     </ul>
                 </div>
             </div>
@@ -545,6 +543,26 @@
                     },
                     error: function() {
                         $('#usuarios-table').html('<p>Error de conexión.</p>');
+                    }
+                });
+            }
+
+            // Load productos
+            function loadProductos() {
+                $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                $.ajax({
+                    url: 'https://nestorcornejo.com/macguiver-inventarios/productos',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.status === 1) {
+                            productosData = response.data; // Store the data
+                            renderProductosTable();
+                        } else {
+                            $('#productos-table').html('<p>Error al cargar productos: ' + response.message + '</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#productos-table').html('<p>Error de conexión.</p>');
                     }
                 });
             }
@@ -987,6 +1005,14 @@
                 loadPagos();
             });
 
+            // Event listeners for productos search and refresh
+            $(document).on('input', '#searchProducto', function() {
+                renderProductosTable();
+            });
+            $(document).on('click', '#refreshProductosBtn', function() {
+                loadProductos();
+            });
+
             // Render users table
             function renderUsersTable() {
                 var searchTerm = $('#searchUserName').val().toLowerCase();
@@ -1016,6 +1042,20 @@
                 });
                 table += '</tbody></table>';
                 $('#pagos-table').html(table);
+            }
+
+            // Render productos table
+            function renderProductosTable() {
+                var searchTerm = $('#searchProducto').val().toLowerCase();
+                var filteredData = productosData.filter(function(producto) {
+                    return producto.name.toLowerCase().includes(searchTerm);
+                });
+                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th></tr></thead><tbody>';
+                filteredData.forEach(function(producto) {
+                    table += '<tr><td>' + producto.id + '</td><td>' + producto.name + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.price || '') + '</td></tr>';
+                });
+                table += '</tbody></table>';
+                $('#productos-table').html(table);
             }
 
             // Save new user
