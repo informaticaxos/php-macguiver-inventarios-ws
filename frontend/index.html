@@ -551,7 +551,7 @@
             function loadProductos() {
                 $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
                 $.ajax({
-                    url: 'https://nestorcornejo.com/macguiver-inventarios/productos',
+                    url: 'https://nestorcornejo.com/macguiver-inventarios/products',
                     method: 'GET',
                     success: function(response) {
                         if (response.status === 1) {
