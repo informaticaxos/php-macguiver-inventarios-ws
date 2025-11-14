@@ -58,10 +58,7 @@ class UserService
             return null; // Username ya existe
         }
 
-        // Hash de la contraseña
-        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-
-        $user = new User(null, $data['fullname'], $data['username'], $hashedPassword, $data['state'] ?? 1, $data['rol'] ?? null);
+        $user = new User(null, $data['fullname'], $data['username'], $data['password'], $data['state'] ?? 1, $data['rol'] ?? null);
         $this->repository->save($user);
         return $user;
     }
@@ -175,8 +172,8 @@ class UserService
             return null; // Usuario no encontrado
         }
 
-        // Verificar contraseña con hash
-        if (!password_verify($password, $user['password'])) {
+        // Verificar contraseña (sin hash, ya que las contraseñas están en texto plano)
+        if ($password !== $user['password']) {
             return null; // Contraseña incorrecta
         }
 
