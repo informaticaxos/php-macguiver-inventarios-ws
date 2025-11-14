@@ -307,7 +307,7 @@
                         if (cell === null || cell === undefined || cell === '') {
                             formattedCell = '0';
                         } else if (!isNaN(parseFloat(cell))) {
-                            formattedCell = parseFloat(cell).toFixed(2);
+                            formattedCell = parseInt(cell) || cell; // Show as integer if possible, else as is
                         }
                         table += '<td>' + formattedCell + '</td>';
                     });
