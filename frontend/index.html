@@ -640,7 +640,7 @@
                 var dateFrom = $('#filterDateFrom').val();
                 var dateTo = $('#filterDateTo').val();
                 var filteredData = formsData.filter(function(form) {
-                    var matchesSearch = form.name.toLowerCase().includes(searchTerm);
+                    var matchesSearch = form.name && form.name.toLowerCase().includes(searchTerm);
                     var matchesStatus = statusFilter === '' || form.status.toString() === statusFilter;
                     var matchesCountry = countryFilter === '' || form.country === countryFilter;
                     var matchesDate = true;
@@ -1083,7 +1083,7 @@
             function renderProductosTable() {
                 var searchTerm = $('#searchProducto').val().toLowerCase();
                 var filteredData = productosData.filter(function(producto) {
-                    return producto.name.toLowerCase().includes(searchTerm);
+                    return producto.name && producto.name.toLowerCase().includes(searchTerm);
                 });
                 var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th></tr></thead><tbody>';
                 filteredData.forEach(function(producto) {
