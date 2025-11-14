@@ -340,7 +340,7 @@
                     var code = row[6] || '';
                     var aux = parseInt(row[7]);
 
-                    if (isNaN(aux) || aux === 0) {
+                    if (isNaN(aux) || aux <= 0) {
                         errors.push('Fila ' + i + ': Aux debe ser un número entero mayor a 0.');
                         continue;
                     }
