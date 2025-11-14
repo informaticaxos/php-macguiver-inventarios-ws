@@ -574,7 +574,7 @@
 
             // Load productos
             function loadProductos() {
-                $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
                 $.ajax({
                     url: 'https://nestorcornejo.com/macguiver-inventarios/products',
                     method: 'GET',
@@ -1073,11 +1073,11 @@
             function renderProductosTable() {
                 var searchTerm = $('#searchProducto').val().toLowerCase();
                 var filteredData = productosData.filter(function(producto) {
-                    return producto.description && producto.description.toLowerCase().includes(searchTerm);
+                    return producto.brand && producto.brand.toLowerCase().includes(searchTerm);
                 });
-                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th></tr></thead><tbody>';
+                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Marca</th><th>Descripción</th><th>Stock</th><th>Costo</th><th>PVP</th><th>Mínimo</th><th>Código</th></tr></thead><tbody>';
                 filteredData.forEach(function(producto) {
-                    table += '<tr><td>' + producto.id + '</td><td>' + producto.description + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.price || '') + '</td></tr>';
+                    table += '<tr><td>' + producto.id_product + '</td><td>' + (producto.brand || '') + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.stock || '') + '</td><td>' + (producto.cost || '') + '</td><td>' + (producto.pvp || '') + '</td><td>' + (producto.min || '') + '</td><td>' + (producto.code || '') + '</td></tr>';
                 });
                 table += '</tbody></table>';
                 $('#productos-table').html(table);
