@@ -305,9 +305,9 @@
                     data[i].forEach(function(cell) {
                         var formattedCell = cell;
                         if (cell === null || cell === undefined || cell === '') {
-                            formattedCell = '0';
+                            formattedCell = '0.00';
                         } else if (!isNaN(parseFloat(cell))) {
-                            formattedCell = parseInt(cell) || cell; // Show as integer if possible, else as is
+                            formattedCell = parseFloat(cell).toFixed(2);
                         }
                         table += '<td>' + formattedCell + '</td>';
                     });
