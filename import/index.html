@@ -188,7 +188,8 @@
                             <table class="table table-striped" id="excelTable"></table>
                         </div>
                         <div class="mt-3">
-                            <button class="btn btn-primary me-2" id="importBtn">Importar a Base de Datos</button>
+                            <button class="btn btn-success me-2" id="prepareBtn">Preparar Datos</button>
+                            <button class="btn btn-primary me-2" id="importBtn" disabled>Importar a Base de Datos</button>
                             <div class="progress mt-2" id="progressContainer" style="display: none;">
                                 <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar"></div>
                             </div>
@@ -373,6 +374,20 @@
                 return products;
             }
 
+            // Prepare button
+            $('#prepareBtn').click(function() {
+                var products = prepareProductsData(excelData);
+                if (!products) return; // Validation failed
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Datos preparados',
+                    text: 'Los datos han sido preparados correctamente. Ahora puedes importar a la base de datos.'
+                });
+
+                $('#importBtn').prop('disabled', false);
+            });
+
             // Import button
             $('#importBtn').click(function() {
                 var products = prepareProductsData(excelData);
@@ -423,8 +438,6 @@
                     }
                 });
             });
-
-            // Process button (removed as import now handles data sending)
         });
     </script>
 </body>
