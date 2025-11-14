@@ -1077,7 +1077,7 @@
                 });
                 var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Marca</th><th>Descripción</th><th>Stock</th><th>Costo</th><th>PVP</th><th>Mínimo</th><th>Código</th></tr></thead><tbody>';
                 filteredData.forEach(function(producto) {
-                    table += '<tr><td>' + producto.id_product + '</td><td>' + (producto.brand || '') + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.stock) + '</td><td>' + (producto.cost || '') + '</td><td>' + (producto.pvp || '') + '</td><td>' + (producto.min || '') + '</td><td>' + (producto.code || '') + '</td></tr>';
+                    table += '<tr><td>' + producto.id_product + '</td><td>' + (producto.brand || '') + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.stock) + '</td><td>' + (producto.cost || '') + '</td><td>' + (producto.pvp || '') + '</td><td>' + (producto.min) + '</td><td>' + (producto.code || '') + '</td></tr>';
                 });
                 table += '</tbody></table>';
                 $('#productos-table').html(table);
