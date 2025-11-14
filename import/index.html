@@ -323,43 +323,47 @@
                 var products = [];
                 var auxValues = new Set();
                 var errors = [];
-console.log(data);
+                var headers = data[0];
+                var headerMap = {
+                    'Marca': 'brand',
+                    'Descripción': 'description',
+                    'Stock': 'stock',
+                    'Costo': 'cost',
+                    'PVP': 'pvp',
+                    'Min': 'min',
+                    'Código': 'code',
+                    'Aux': 'aux'
+                };
+
                 for (var i = 1; i < data.length; i++) { // Skip header row
                     var row = data[i];
-                    if (row.length < 8) {
-                        errors.push('Fila ' + i + ': No tiene suficientes columnas.');
-                        continue;
+                    var product = {};
+                    for (var j = 0; j < headers.length; j++) {
+                        var header = headers[j];
+                        var key = headerMap[header] || header.toLowerCase();
+                        product[key] = row[j] || '';
                     }
 
-                    var brand = row[0] || '';
-                    var description = row[1] || '';
-                    var stock = parseInt(row[2]) || 0;
-                    var cost = parseFloat(row[3]) || 0.0;
-                    var pvp = parseFloat(row[4]) || 0.0;
-                    var min = parseInt(row[5]) || 0;
-                    var code = row[6] || '';
-                    var aux = parseInt(row[7]);
-
+                    // Validate aux
+                    var aux = parseInt(product.aux);
                     if (isNaN(aux) || aux <= 0) {
-                        errors.push('Fila ' + i + ': Aux debe ser un número entero mayor a 0.');
+                        errors.push('Fila ' + i + ': ' + (headers[headers.indexOf('Aux')] || 'Aux') + ' debe ser un número entero mayor a 0.');
                         continue;
                     }
                     if (auxValues.has(aux)) {
-                        errors.push('Fila ' + i + ': Aux ' + aux + ' no es único.');
+                        errors.push('Fila ' + i + ': ' + (headers[headers.indexOf('Aux')] || 'Aux') + ' ' + aux + ' no es único.');
                         continue;
                     }
                     auxValues.add(aux);
 
-                    products.push({
-                        brand: brand,
-                        description: description,
-                        stock: stock,
-                        cost: cost,
-                        pvp: pvp,
-                        min: min,
-                        code: code,
-                        aux: parseInt(aux)
-                    });
+                    // Ensure numeric fields
+                    product.stock = parseInt(product.stock) || 0;
+                    product.cost = parseFloat(product.cost) || 0.0;
+                    product.pvp = parseFloat(product.pvp) || 0.0;
+                    product.min = parseInt(product.min) || 0;
+                    product.aux = aux;
+
+                    products.push(product);
                 }
 
                 if (errors.length > 0) {
