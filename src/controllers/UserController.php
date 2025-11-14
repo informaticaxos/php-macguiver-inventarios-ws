@@ -161,6 +161,9 @@ class UserController
 
         $user = $this->service->login($data['username'], $data['password']);
         if ($user) {
+            // Map fullname to name for frontend compatibility
+            $user['name'] = $user['fullname'];
+            unset($user['fullname']);
             $this->sendResponse(200, 1, 'Login successful', $user);
         } else {
             $this->sendResponse(401, 0, 'Invalid credentials or user inactive', null);
