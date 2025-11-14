@@ -129,18 +129,13 @@
                     <h5 class="text-white p-3">Dashboard</h5>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" data-section="formularios">
-                                <i class="fas fa-file-alt"></i> Formularios
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="usuarios">
+                            <a class="nav-link active" href="#" data-section="usuarios">
                                 <i class="fas fa-users"></i> Usuarios
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="pagos">
-                                <i class="fas fa-credit-card"></i> PAGOS
+                            <a class="nav-link" href="#" data-section="productos">
+                                <i class="fas fa-box"></i> Productos
                             </a>
                         </li>
                         <!-- Add more menu items here if needed -->
@@ -452,12 +447,10 @@
 
             // Load section content
             function loadSection(section) {
-                if (section === 'formularios') {
-                    loadFormularios();
-                } else if (section === 'usuarios') {
+                if (section === 'usuarios') {
                     loadUsuarios();
-                } else if (section === 'pagos') {
-                    loadPagos();
+                } else if (section === 'productos') {
+                    loadProductos();
                 }
             }
 
