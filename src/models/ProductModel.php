@@ -2,7 +2,7 @@
 
 /**
  * Modelo para la tabla products
- * Representa una entidad básica con campos: id_product, name, brand, description, stock, cost, pvp, min, code
+ * Representa una entidad básica con campos: id_product, brand, description, stock, cost, pvp, min, code, aux
  */
 class Product
 {
@@ -14,6 +14,7 @@ class Product
     private $pvp;
     private $min;
     private $code;
+    private $aux;
 
     /**
      * Constructor de la clase Product
@@ -26,8 +27,9 @@ class Product
      * @param float $pvp
      * @param int $min
      * @param string $code
+     * @param int $aux
      */
-    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0.0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '')
+    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0.0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '', $aux = 0)
     {
         $this->id_product = $id_product;
         $this->brand = $brand;
@@ -37,6 +39,7 @@ class Product
         $this->pvp = $pvp;
         $this->min = $min;
         $this->code = $code;
+        $this->aux = $aux;
     }
 
     // Getters
@@ -82,6 +85,11 @@ class Product
         return $this->code;
     }
 
+    public function getAux()
+    {
+        return $this->aux;
+    }
+
     // Setters
     public function setIdProduct($id_product)
     {
@@ -125,6 +133,11 @@ class Product
         $this->code = $code;
     }
 
+    public function setAux($aux)
+    {
+        $this->aux = $aux;
+    }
+
     /**
      * Método para convertir el objeto a array (útil para JSON responses)
      *
@@ -141,6 +154,7 @@ class Product
             'pvp' => $this->pvp,
             'min' => $this->min,
             'code' => $this->code,
+            'aux' => $this->aux,
         ];
     }
 }

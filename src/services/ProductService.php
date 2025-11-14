@@ -58,7 +58,7 @@ class ProductService
             return null; // Code ya existe
         }
 
-        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0.0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code']);
+        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0.0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux'] ?? 0);
         $this->repository->save($product);
         return $product;
     }
@@ -88,7 +88,7 @@ class ProductService
             return null; // Code ya existe en otro producto
         }
 
-        $product = new Product($id, $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code']);
+        $product = new Product($id, $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code'], $data['aux'] ?? $existing['aux']);
         $this->repository->save($product);
         return $product;
     }
@@ -151,7 +151,8 @@ class ProductService
                     $productData['cost'] ?? 0,
                     $productData['pvp'] ?? 0,
                     $productData['min'] ?? 0,
-                    $productData['code']
+                    $productData['code'],
+                    $productData['aux'] ?? 0
                 );
 
                 $this->repository->save($product);
