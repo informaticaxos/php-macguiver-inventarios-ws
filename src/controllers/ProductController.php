@@ -89,8 +89,17 @@ class ProductController
      */
     public function import()
     {
+        // Iniciar sesión de progreso
+        session_start();
+        $_SESSION['import_progress'] = 0;
+        $_SESSION['import_total'] = 0;
+        $_SESSION['import_current'] = 0;
+
+        // Ejecutar importación en segundo plano
         $result = $this->service->importProducts();
+
         if ($result['success']) {
+            $_SESSION['import_progress'] = 100;
             $this->sendResponse(200, 1, 'Products imported successfully', $result);
         } else {
             $this->sendResponse(500, 0, 'Import failed: ' . $result['message'], null);

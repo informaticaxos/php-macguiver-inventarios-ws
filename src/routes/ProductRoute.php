@@ -33,6 +33,8 @@ class ProductRoute
             $this->controller->getById($id);
         } elseif ($path === '/products/import' && $method === 'GET') {
             $this->controller->import();
+        } elseif ($path === '/products/import/progress' && $method === 'GET') {
+            $this->getImportProgress();
         } elseif ($path === '/products' && $method === 'POST') {
             $this->controller->create();
         } elseif (preg_match('/^\/products\/(\d+)$/', $path, $matches) && $method === 'PUT') {
@@ -45,5 +47,28 @@ class ProductRoute
             http_response_code(404);
             echo json_encode(['status' => 0, 'message' => 'Route not found', 'data' => null]);
         }
+    }
+
+    /**
+     * Obtiene el progreso de la importación
+     */
+    private function getImportProgress()
+    {
+        session_start();
+        $progress = isset($_SESSION['import_progress']) ? $_SESSION['import_progress'] : 0;
+        $total = isset($_SESSION['import_total']) ? $_SESSION['import_total'] : 0;
+        $current = isset($_SESSION['import_current']) ? $_SESSION['import_current'] : 0;
+
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 1,
+            'message' => 'Import progress retrieved',
+            'data' => [
+                'progress' => $progress,
+                'total' => $total,
+                'current' => $current
+            ]
+        ]);
     }
 }

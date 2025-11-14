@@ -114,9 +114,22 @@ class ProductService
         $products = $data['products'];
         $imported = 0;
         $errors = [];
+        $total = count($products);
 
-        foreach ($products as $productData) {
+        // Iniciar sesión para progreso
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['import_progress'] = 0;
+        $_SESSION['import_total'] = $total;
+        $_SESSION['import_current'] = 0;
+
+        foreach ($products as $index => $productData) {
             try {
+                // Actualizar progreso
+                $_SESSION['import_current'] = $index + 1;
+                $_SESSION['import_progress'] = round((($index + 1) / $total) * 100);
+
                 // Validar datos básicos
                 if (empty($productData['code'])) {
                     $errors[] = 'Missing code for product';
@@ -148,11 +161,13 @@ class ProductService
             }
         }
 
+        $_SESSION['import_progress'] = 100;
+
         return [
             'success' => true,
             'imported' => $imported,
             'errors' => $errors,
-            'total' => count($products)
+            'total' => $total
         ];
     }
 
