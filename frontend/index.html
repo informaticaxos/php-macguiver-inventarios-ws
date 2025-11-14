@@ -1073,11 +1073,11 @@
             function renderProductosTable() {
                 var searchTerm = $('#searchProducto').val().toLowerCase();
                 var filteredData = productosData.filter(function(producto) {
-                    return producto.name && producto.name.toLowerCase().includes(searchTerm);
+                    return producto.description && producto.description.toLowerCase().includes(searchTerm);
                 });
                 var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th></tr></thead><tbody>';
                 filteredData.forEach(function(producto) {
-                    table += '<tr><td>' + producto.id + '</td><td>' + producto.name + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.price || '') + '</td></tr>';
+                    table += '<tr><td>' + producto.id + '</td><td>' + producto.description + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.price || '') + '</td></tr>';
                 });
                 table += '</tbody></table>';
                 $('#productos-table').html(table);
