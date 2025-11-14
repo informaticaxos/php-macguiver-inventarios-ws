@@ -189,7 +189,6 @@
                         </div>
                         <div class="mt-3">
                             <button class="btn btn-primary me-2" id="importBtn">Importar a Base de Datos</button>
-                            <button class="btn btn-success" id="processBtn">Procesar Datos</button>
                             <div class="progress mt-2" id="progressContainer" style="display: none;">
                                 <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar"></div>
                             </div>
@@ -318,15 +317,76 @@
                 $('#excelTable').html(table);
             }
 
+            // Prepare products array from excelData
+            function prepareProductsData(data) {
+                var products = [];
+                var auxValues = new Set();
+                var errors = [];
+
+                for (var i = 1; i < data.length; i++) { // Skip header row
+                    var row = data[i];
+                    if (row.length < 8) {
+                        errors.push('Fila ' + i + ': No tiene suficientes columnas.');
+                        continue;
+                    }
+
+                    var brand = row[0] || '';
+                    var description = row[1] || '';
+                    var stock = parseInt(row[2]) || 0;
+                    var cost = parseFloat(row[3]) || 0.0;
+                    var pvp = parseFloat(row[4]) || 0.0;
+                    var min = parseInt(row[5]) || 0;
+                    var code = row[6] || '';
+                    var aux = parseInt(row[7]);
+
+                    if (isNaN(aux)) {
+                        errors.push('Fila ' + i + ': Aux debe ser un número entero.');
+                        continue;
+                    }
+                    if (auxValues.has(aux)) {
+                        errors.push('Fila ' + i + ': Aux ' + aux + ' no es único.');
+                        continue;
+                    }
+                    auxValues.add(aux);
+
+                    products.push({
+                        brand: brand,
+                        description: description,
+                        stock: stock,
+                        cost: cost,
+                        pvp: pvp,
+                        min: min,
+                        code: code,
+                        aux: aux
+                    });
+                }
+
+                if (errors.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Errores en los datos',
+                        html: errors.join('<br>')
+                    });
+                    return null;
+                }
+
+                return products;
+            }
+
             // Import button
             $('#importBtn').click(function() {
+                var products = prepareProductsData(excelData);
+                if (!products) return; // Validation failed
+
                 $('#progressContainer').show();
                 $('#progressBar').css('width', '0%');
 
                 // AJAX call to import endpoint
                 $.ajax({
-                    url: 'https://nestorcornejo.com/macguiver-inventarios/products/import',
-                    type: 'GET',
+                    url: '/products/import',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ products: products }),
                     xhr: function() {
                         var xhr = new window.XMLHttpRequest();
                         xhr.addEventListener("progress", function(evt) {
@@ -364,29 +424,7 @@
                 });
             });
 
-            // Process button (placeholder for backend integration)
-            $('#processBtn').click(function() {
-                $('#progressContainer').show();
-                $('#progressBar').css('width', '0%');
-
-                // Simulate progress
-                var progress = 0;
-                var interval = setInterval(function() {
-                    progress += 10;
-                    $('#progressBar').css('width', progress + '%');
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        $('#progressContainer').hide();
-                        // Here you can send excelData to backend via AJAX
-                        // For now, just show a success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Procesado',
-                            text: 'Los datos han sido procesados (integración con backend pendiente).'
-                        });
-                    }
-                }, 200);
-            });
+            // Process button (removed as import now handles data sending)
         });
     </script>
 </body>
