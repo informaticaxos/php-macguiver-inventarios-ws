@@ -1069,18 +1069,36 @@
                 $('#pagos-table').html(table);
             }
 
-            // Render productos table
+            // Render productos cards
             function renderProductosTable() {
                 var searchTerm = $('#searchProducto').val().toLowerCase();
                 var filteredData = productosData.filter(function(producto) {
                     return producto.brand && producto.brand.toLowerCase().includes(searchTerm);
                 });
-                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Código</th><th>Marca</th><th>Descripción</th><th>Stock</th><th>Costo</th><th>PVP</th><th>Mínimo</th></tr></thead><tbody>';
+                var cards = '<div class="row g-3">';
                 filteredData.forEach(function(producto) {
-                    table += '<tr><td>' + producto.id_product + '</td><td>' + (producto.code || '') + '</td><td>' + (producto.brand || '') + '</td><td>' + (producto.description || '') + '</td><td>' + (producto.stock) + '</td><td>' + (producto.cost || '') + '</td><td>' + (producto.pvp || '') + '</td><td>' + (producto.min) + '</td></tr>';
+                    cards += '<div class="col-lg-4 col-md-6 col-sm-12">' +
+                        '<div class="card h-100 shadow-sm">' +
+                        '<div class="card-header bg-primary text-white">' +
+                        '<h6 class="card-title mb-0">' + (producto.code || 'N/A') + ' - ' + (producto.brand || 'N/A') + '</h6>' +
+                        '</div>' +
+                        '<div class="card-body">' +
+                        '<p class="card-text"><strong>Descripción:</strong> ' + (producto.description || 'N/A') + '</p>' +
+                        '<div class="row">' +
+                        '<div class="col-6"><strong>Stock:</strong> ' + (producto.stock || 0) + '</div>' +
+                        '<div class="col-6"><strong>Costo:</strong> $' + (producto.cost || 0) + '</div>' +
+                        '</div>' +
+                        '<div class="row mt-2">' +
+                        '<div class="col-6"><strong>PVP:</strong> $' + (producto.pvp || 0) + '</div>' +
+                        '<div class="col-6"><strong>Mínimo:</strong> ' + (producto.min || 0) + '</div>' +
+                        '</div>' +
+                        '<small class="text-muted">ID: ' + producto.id_product + '</small>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
                 });
-                table += '</tbody></table>';
-                $('#productos-table').html(table);
+                cards += '</div>';
+                $('#productos-table').html(cards);
             }
 
             // Save new user
