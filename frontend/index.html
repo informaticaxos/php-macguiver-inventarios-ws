@@ -511,9 +511,9 @@
 
             // Load usuarios
             function loadUsuarios() {
-                $('#content-area').html('<h2>Usuarios</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchUserName" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div><button id="refreshUsersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-outline-dark btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#createUserModal"><i class="fas fa-user-plus"></i> Nuevo</button></div></div><div id="usuarios-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                $('#content-area').html('<h2>Usuarios</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchUserName" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div><button id="refreshUsersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="usuarios-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
                 $.ajax({
-                    url: 'https://fercoadvancededucation.com/php-ferco-files-ws/users',
+                    url: 'https://nestorcornejo.com/macguiver-inventarios/users',
                     method: 'GET',
                     success: function(response) {
                         if (response.status === 1) {
@@ -970,15 +970,15 @@
             // Render users table
             function renderUsersTable() {
                 var searchTerm = $('#searchUserName').val().toLowerCase();
-                var roleFilter = $('#filterRole').val();
                 var filteredData = usersData.filter(function(user) {
-                    var matchesSearch = user.name.toLowerCase().includes(searchTerm);
-                    var matchesRole = roleFilter === '' || user.role === roleFilter;
-                    return matchesSearch && matchesRole;
+                    var matchesSearch = user.fullname.toLowerCase().includes(searchTerm);
+                    return matchesSearch;
                 });
-                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Acciones</th></tr></thead><tbody>';
+                var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre Completo</th><th>Usuario</th><th>Estado</th><th>Rol</th></tr></thead><tbody>';
                 filteredData.forEach(function(user) {
-                    table += '<tr><td>' + user.id_user + '</td><td>' + user.name + '</td><td>' + user.email + '</td><td><div class="d-flex gap-1"><button class="btn btn-warning btn-xs" onclick="openEditUserModal(' + user.id_user + ', \'' + user.name.replace(/'/g, "\\'") + '\', \'' + user.email + '\')"><i class="fas fa-edit"></i> Edit</button><button class="btn btn-info btn-xs" onclick="openChangePasswordModal(' + user.id_user + ')"><i class="fas fa-key"></i> Cambiar Contraseña</button><button class="btn btn-danger btn-xs" onclick="deleteUser(' + user.id_user + ')"><i class="fas fa-trash"></i> Delete</button></div></td></tr>';
+                    var stateText = user.state === 1 ? 'Activo' : 'Inactivo';
+                    var rolText = user.rol === 1 ? 'Admin' : 'Usuario';
+                    table += '<tr><td>' + user.id_user + '</td><td>' + user.fullname + '</td><td>' + user.username + '</td><td>' + stateText + '</td><td>' + rolText + '</td></tr>';
                 });
                 table += '</tbody></table>';
                 $('#usuarios-table').html(table);
