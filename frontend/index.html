@@ -456,12 +456,58 @@
         </div>
     </div>
 
+    <!-- Modal for importing products from Excel -->
+    <div class="modal fade" id="importProductsModal" tabindex="-1" aria-labelledby="importProductsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importProductsModalLabel">Importar Productos desde Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label">Seleccionar archivo Excel</label>
+                        <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls">
+                    </div>
+                    <div id="productsPreview" style="display: none;">
+                        <h6>Productos a importar:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Marca</th>
+                                        <th>Descripción</th>
+                                        <th>Stock</th>
+                                        <th>Costo</th>
+                                        <th>PVP</th>
+                                        <th>Mínimo</th>
+                                        <th>Aux</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary btn-xs" id="previewProducts">Vista Previa</button>
+                    <button type="button" class="btn btn-success btn-xs" id="importProducts" style="display: none;">Importar Productos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="index.js"></script>
 </body>
 </html>

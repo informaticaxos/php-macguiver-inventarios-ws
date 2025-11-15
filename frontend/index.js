@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     // Load productos
     function loadProductos() {
-        $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#content-area').html('<h2>Productos</h2><div class="d-flex justify-content-between mb-3"><div class="d-flex"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         $.ajax({
             url: 'https://nestorcornejo.com/macguiver-inventarios/products',
             method: 'GET',
@@ -853,4 +853,110 @@ $(document).ready(function() {
             }
         });
     };
+
+    // Import products from Excel
+    var importedProducts = [];
+
+    // Preview products from Excel
+    $('#previewProducts').click(function() {
+        var fileInput = document.getElementById('excelFile');
+        var file = fileInput.files[0];
+        if (!file) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Archivo requerido',
+                text: 'Por favor, selecciona un archivo Excel.'
+            });
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var data = new Uint8Array(e.target.result);
+            var workbook = XLSX.read(data, {type: 'array'});
+            var sheetName = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[sheetName];
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+            // Assuming first row is headers: Código, Marca, Descripción, Stock, Costo, PVP, Mínimo, Aux
+            if (jsonData.length < 2) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El archivo Excel debe contener al menos una fila de datos.'
+                });
+                return;
+            }
+
+            importedProducts = [];
+            for (var i = 1; i < jsonData.length; i++) {
+                var row = jsonData[i];
+                if (row.length >= 8) {
+                    importedProducts.push({
+                        code: row[0] || '',
+                        brand: row[1] || '',
+                        description: row[2] || '',
+                        stock: parseInt(row[3]) || 0,
+                        cost: parseFloat(row[4]) || 0,
+                        pvp: parseFloat(row[5]) || 0,
+                        min: parseInt(row[6]) || 0,
+                        aux: parseInt(row[7]) || 0
+                    });
+                }
+            }
+
+            // Render preview table
+            var tableHtml = '<table class="table table-striped"><thead><tr><th>Código</th><th>Marca</th><th>Descripción</th><th>Stock</th><th>Costo</th><th>PVP</th><th>Mínimo</th><th>Aux</th></tr></thead><tbody>';
+            importedProducts.forEach(function(product) {
+                tableHtml += '<tr><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
+            });
+            tableHtml += '</tbody></table>';
+            $('#productsTableBody').html(tableHtml);
+            $('#productsPreview').show();
+            $('#importProducts').show();
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+    // Import products
+    $('#importProducts').click(function() {
+        if (importedProducts.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sin productos',
+                text: 'No hay productos para importar.'
+            });
+            return;
+        }
+
+        // Send products to server
+        $.ajax({
+            url: 'https://nestorcornejo.com/macguiver-inventarios/products/bulk',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({products: importedProducts}),
+            success: function(response) {
+                Swal.fire({
+                    icon: response.status === 1 ? 'success' : 'error',
+                    title: response.status === 1 ? 'Éxito' : 'Error',
+                    text: response.message
+                });
+                if (response.status === 1) {
+                    $('#importProductsModal').modal('hide');
+                    $('#excelFile').val('');
+                    $('#productsPreview').hide();
+                    $('#importProducts').hide();
+                    importedProducts = [];
+                    loadProductos(); // Reload the products table
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error de conexión.'
+                });
+            }
+        });
+    });
 });
