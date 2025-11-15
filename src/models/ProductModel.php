@@ -22,14 +22,14 @@ class Product
      * @param int|null $id_product
      * @param string $brand
      * @param string $description
-     * @param float $stock
+     * @param int $stock
      * @param float $cost
      * @param float $pvp
      * @param int $min
      * @param string $code
-     * @param int $aux
+     * @param string $aux
      */
-    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0.0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '', $aux = 0)
+    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '', $aux = '')
     {
         $this->id_product = $id_product;
         $this->brand = $brand;

@@ -53,12 +53,22 @@ class ProductService
             return null; // Error de validación
         }
 
+        // Validar aux: debe ser string no vacío y único
+        if (empty($data['aux']) || !is_string($data['aux'])) {
+            return null; // Error de validación
+        }
+
         // Verificar si el code ya existe
         if ($this->repository->findByCode($data['code'])) {
             return null; // Code ya existe
         }
 
-        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0.0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux'] ?? 0);
+        // Verificar si aux ya existe
+        if ($this->repository->findByAux($data['aux'])) {
+            return null; // Aux ya existe
+        }
+
+        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux']);
         $this->repository->save($product);
         return $product;
     }
@@ -130,9 +140,9 @@ class ProductService
                     continue;
                 }
 
-                // Validar aux: debe ser entero > 0 y único
-                if (!isset($productData['aux']) || !is_numeric($productData['aux']) || $productData['aux'] <= 0) {
-                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be integer > 0';
+                // Validar aux: debe ser string no vacío y único
+                if (!isset($productData['aux']) || !is_string($productData['aux']) || empty($productData['aux'])) {
+                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be non-empty string';
                     continue;
                 }
 
