@@ -1,9 +1,9 @@
 $(document).ready(function() {
     // Check if logged in
-    if (localStorage.getItem('loggedIn') !== 'true') {
-        window.location.href = 'login.html';
-        return;
-    }
+    // if (localStorage.getItem('loggedIn') !== 'true') {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
     var formsData = []; // Store the forms data globally
     var productosData = []; // Store the productos data globally
