@@ -172,8 +172,10 @@ class UserService
             return null; // Usuario no encontrado
         }
 
-        // Verificar contraseña (sin hash, ya que las contraseñas están en texto plano)
-        if ($password !== $user['password']) {
+        // Verificar contraseña usando password_verify si está hasheada, o comparación directa si no
+        if (password_verify($password, $user['password']) || $password === $user['password']) {
+            // Contraseña correcta
+        } else {
             return null; // Contraseña incorrecta
         }
 

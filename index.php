@@ -7,9 +7,7 @@ require_once 'src/routes/UserRoute.php';
 $userRoutes = $routes;
 
 require_once 'src/routes/ProductRoute.php';
-$productRoutes = new ProductRoute();
-
-$routes = $userRoutes;
+$productRoutes = $routes;
 
 require_once 'src/controllers/UserController.php';
 require_once 'src/controllers/ProductController.php';
@@ -47,14 +45,11 @@ function matchRoute($routes, $method, $path)
 // Obtener método y path de la solicitud
 list($method, $path) = getRequestMethodAndPath();
 
-// Verificar rutas de productos primero
-if (strpos($path, '/products') === 0) {
-    $productRoutes->handle($method, $path);
-    exit;
-}
+// Combinar rutas de usuarios y productos
+$allRoutes = array_merge($userRoutes, $productRoutes);
 
 // Hacer match con las rutas definidas
-$match = matchRoute($routes, $method, $path);
+$match = matchRoute($allRoutes, $method, $path);
 
 if ($match) {
     list($handler, $params) = $match;
