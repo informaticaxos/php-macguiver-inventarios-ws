@@ -85,18 +85,24 @@ class ProductController
     }
 
     /**
-     * Importa productos desde el archivo JSON
+     * Importa productos desde datos JSON enviados por POST
      */
     public function import()
     {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data || !isset($data['products'])) {
+            $this->sendResponse(400, 0, 'Invalid JSON data or missing products array', null);
+            return;
+        }
+
         // Iniciar sesión de progreso
         session_start();
         $_SESSION['import_progress'] = 0;
         $_SESSION['import_total'] = 0;
         $_SESSION['import_current'] = 0;
 
-        // Ejecutar importación en segundo plano
-        $result = $this->service->importProducts();
+        // Ejecutar importación con los datos enviados
+        $result = $this->service->importProductsFromData($data['products']);
 
         if ($result['success']) {
             $_SESSION['import_progress'] = 100;

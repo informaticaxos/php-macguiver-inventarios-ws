@@ -94,24 +94,18 @@ class ProductService
     }
 
     /**
-     * Importa productos desde el archivo JSON
+     * Importa productos desde datos enviados por POST
      *
+     * @param array $productsData
      * @return array
      */
-    public function importProducts()
+    public function importProductsFromData($productsData)
     {
-        $filePath = __DIR__ . '/../../files/plantilla_precios.json';
-        if (!file_exists($filePath)) {
-            return ['success' => false, 'message' => 'File not found'];
+        if (!is_array($productsData)) {
+            return ['success' => false, 'message' => 'Invalid products data'];
         }
 
-        $jsonContent = file_get_contents($filePath);
-        $data = json_decode($jsonContent, true);
-        if (!$data || !isset($data['products'])) {
-            return ['success' => false, 'message' => 'Invalid JSON structure'];
-        }
-
-        $products = $data['products'];
+        $products = $productsData;
         $imported = 0;
         $errors = [];
         $total = count($products);
@@ -132,13 +126,25 @@ class ProductService
 
                 // Validar datos básicos
                 if (empty($productData['code'])) {
-                    $errors[] = 'Missing code for product';
+                    $errors[] = 'Missing code for product at row ' . ($index + 1);
                     continue;
                 }
 
-                // Verificar si ya existe
+                // Validar aux: debe ser entero > 0 y único
+                if (!isset($productData['aux']) || !is_numeric($productData['aux']) || $productData['aux'] <= 0) {
+                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be integer > 0';
+                    continue;
+                }
+
+                // Verificar si aux ya existe
+                if ($this->repository->findByAux($productData['aux'])) {
+                    $errors[] = 'Aux ' . $productData['aux'] . ' already exists for product ' . $productData['code'];
+                    continue;
+                }
+
+                // Verificar si code ya existe
                 if ($this->repository->findByCode($productData['code'])) {
-                    // Skip existing products
+                    $errors[] = 'Code ' . $productData['code'] . ' already exists';
                     continue;
                 }
 
@@ -148,11 +154,11 @@ class ProductService
                     $productData['brand'] ?? '',
                     $productData['description'] ?? '',
                     $productData['stock'] ?? 0,
-                    $productData['cost'] ?? 0,
-                    $productData['pvp'] ?? 0,
+                    $productData['cost'] ?? 0.0,
+                    $productData['pvp'] ?? 0.0,
                     $productData['min'] ?? 0,
                     $productData['code'],
-                    $productData['aux'] ?? 0
+                    $productData['aux']
                 );
 
                 $this->repository->save($product);

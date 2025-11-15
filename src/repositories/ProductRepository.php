@@ -57,6 +57,19 @@ class ProductRepository
     }
 
     /**
+     * Obtiene un product por aux
+     *
+     * @param int $aux
+     * @return array|null
+     */
+    public function findByAux($aux)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE aux = ?");
+        $stmt->execute([$aux]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Guarda un product (inserta si no tiene ID, actualiza si lo tiene)
      *
      * @param Product $product

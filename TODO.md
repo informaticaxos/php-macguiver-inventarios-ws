@@ -5,4 +5,8 @@
 - [x] Update importBtn: Change to POST request sending the products array to '/products/import' (relative URL), with progress bar updates.
 - [x] Remove or repurpose processBtn: Since import will handle data sending, remove the placeholder processBtn or repurpose it if needed.
 - [x] Update prepareProductsData to use first row as headers for mapping columns dynamically.
+- [x] Update ProductRoute.php to handle POST for /products/import.
+- [x] Update ProductController.php to accept JSON data for import.
+- [x] Update ProductService.php to import from POST data with aux validation.
+- [x] Add findByAux method to ProductRepository.php.
 - [ ] Test the import functionality with a sample Excel file and verify backend integration.
