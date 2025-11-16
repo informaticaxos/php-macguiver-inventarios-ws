@@ -898,14 +898,13 @@ $(document).ready(function () {
                 if (row.length >= 8) {
                     importedProducts.push({
                         code: row[0] || '',
-                        aux: (row[1]) || 0,
+                        brand: row[1] || '',
                         description: row[2] || '',
-                        brand: row[3] || '',
-                        stock: parseInt(row[4]) || 0,
-                        cost: parseFloat(row[5]) || 0,
-                        pvp: parseFloat(row[6]) || 0,
-                        min: parseInt(row[7]) || 0,
-
+                        stock: parseInt(row[3]) || 0,
+                        cost: parseFloat(row[4]) || 0,
+                        pvp: parseFloat(row[5]) || 0,
+                        min: parseInt(row[6]) || 0,
+                        aux: parseInt(row[7]) || 0
                     });
                 }
             }
@@ -913,11 +912,11 @@ $(document).ready(function () {
             // Render preview table rows only (headers are already in HTML)
             var rowsHtml = '';
             importedProducts.forEach(function (product, index) {
-                rowsHtml += '<tr id="product-row-' + index + '"><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td><td id="status-' + index + '"><i class="fas fa-clock text-warning"></i> Pendiente</td></tr>';
+                rowsHtml += '<tr id="product-row-' + index + '"><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
             });
             $('#productsTableBody').html(rowsHtml);
             $('#productsPreview').show();
-            $('#saveProducts').show();
+            $('#importProducts').show();
             $('#clearPreview').show();
             $('#progressBar').show().css('width', '0%').text('0%');
 
@@ -970,7 +969,7 @@ $(document).ready(function () {
                     $('#importProductsModal').modal('hide');
                     $('#excelFile').val('');
                     $('#productsPreview').hide();
-                    $('#saveProducts').hide();
+                    $('#importProducts').hide();
                     $('#clearPreview').hide();
                     importedProducts = [];
                     loadProductos(); // Reload the products table
