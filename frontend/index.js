@@ -612,7 +612,7 @@ $(document).ready(function () {
         });
         var cards = '<div class="row g-3">';
         filteredData.forEach(function (producto) {
-            cards += '<div class="col-lg-4 col-md-6 col-sm-12">' +
+            cards += '<div class="col-lg-3 col-md-6 col-sm-12">' +
                 '<div class="card h-100 shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
                 '<h6 class="card-title mb-0">' + (producto.code || 'N/A') + ' - ' + (producto.brand || 'N/A') + '</h6>' +
