@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Check if logged in
     // if (localStorage.getItem('loggedIn') !== 'true') {
     //     window.location.href = 'login.html';
@@ -9,7 +9,7 @@ $(document).ready(function() {
     var productosData = []; // Store the productos data globally
 
     // Handle sidebar navigation
-    $('.sidebar .nav-link, .offcanvas .nav-link').click(function(e) {
+    $('.sidebar .nav-link, .offcanvas .nav-link').click(function (e) {
         e.preventDefault();
         $('.sidebar .nav-link, .offcanvas .nav-link').removeClass('active');
         $(this).addClass('active');
@@ -33,22 +33,22 @@ $(document).ready(function() {
     }
 
     // Event listeners for search and filter
-    $(document).on('input', '#searchName', function() {
+    $(document).on('input', '#searchName', function () {
         renderTable();
     });
-    $(document).on('change', '#filterStatus', function() {
+    $(document).on('change', '#filterStatus', function () {
         renderTable();
     });
-    $(document).on('change', '#filterCountry', function() {
+    $(document).on('change', '#filterCountry', function () {
         renderTable();
     });
-    $(document).on('change', '#filterDateFrom', function() {
+    $(document).on('change', '#filterDateFrom', function () {
         renderTable();
     });
-    $(document).on('change', '#filterDateTo', function() {
+    $(document).on('change', '#filterDateTo', function () {
         renderTable();
     });
-    $(document).on('click', '#refreshBtn', function() {
+    $(document).on('click', '#refreshBtn', function () {
         loadFormularios();
     });
 
@@ -58,22 +58,22 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://fercoadvancededucation.com/php-ferco-files-ws/forms',
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 1) {
                     formsData = response.data; // Store the data
                     // Fetch file counts asynchronously for all forms
-                    var promises = formsData.map(function(form) {
+                    var promises = formsData.map(function (form) {
                         return $.ajax({
                             url: 'https://fercoadvancededucation.com/php-ferco-files-ws/files/form/' + form.id_form,
                             method: 'GET'
-                        }).then(function(fileResponse) {
+                        }).then(function (fileResponse) {
                             form.fileCount = fileResponse.status === 1 ? fileResponse.data.length : 0;
-                        }).catch(function() {
+                        }).catch(function () {
                             form.fileCount = 0;
                         });
                     });
                     // Wait for all file counts to be fetched
-                    $.when.apply($, promises).then(function() {
+                    $.when.apply($, promises).then(function () {
                         populateCountryFilter();
                         renderTable();
                     });
@@ -81,7 +81,7 @@ $(document).ready(function() {
                     $('#formularios-table').html('<p>Error al cargar formularios: ' + response.message + '</p>');
                 }
             },
-            error: function() {
+            error: function () {
                 $('#formularios-table').html('<p>Error de conexión.</p>');
             }
         });
@@ -93,7 +93,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://nestorcornejo.com/macguiver-inventarios/users',
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 1) {
                     usersData = response.data; // Store the data
                     renderUsersTable();
@@ -101,7 +101,7 @@ $(document).ready(function() {
                     $('#usuarios-table').html('<p>Error al cargar usuarios: ' + response.message + '</p>');
                 }
             },
-            error: function() {
+            error: function () {
                 $('#usuarios-table').html('<p>Error de conexión.</p>');
             }
         });
@@ -113,7 +113,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://nestorcornejo.com/macguiver-inventarios/products',
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 1) {
                     productosData = response.data; // Store the data
                     renderProductosTable();
@@ -121,7 +121,7 @@ $(document).ready(function() {
                     $('#productos-table').html('<p>Error al cargar productos: ' + response.message + '</p>');
                 }
             },
-            error: function() {
+            error: function () {
                 $('#productos-table').html('<p>Error de conexión.</p>');
             }
         });
@@ -133,7 +133,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://fercoadvancededucation.com/php-ferco-files-ws/pagos',
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 1) {
                     pagosData = response.data; // Store the data
                     renderPagosTable();
@@ -141,7 +141,7 @@ $(document).ready(function() {
                     $('#pagos-table').html('<p>Error al cargar pagos: ' + response.message + '</p>');
                 }
             },
-            error: function() {
+            error: function () {
                 $('#pagos-table').html('<p>Error de conexión.</p>');
             }
         });
@@ -151,7 +151,7 @@ $(document).ready(function() {
     function populateCountryFilter() {
         var countries = [...new Set(formsData.map(form => form.country).filter(country => country))];
         var options = '<option value="">Todos los países</option>';
-        countries.forEach(function(country) {
+        countries.forEach(function (country) {
             options += '<option value="' + country + '">' + country + '</option>';
         });
         $('#filterCountry').html(options);
@@ -164,7 +164,7 @@ $(document).ready(function() {
         var countryFilter = $('#filterCountry').val();
         var dateFrom = $('#filterDateFrom').val();
         var dateTo = $('#filterDateTo').val();
-        var filteredData = formsData.filter(function(form) {
+        var filteredData = formsData.filter(function (form) {
             var matchesSearch = form.name && form.name.toLowerCase().includes(searchTerm);
             var matchesStatus = statusFilter === '' || form.status.toString() === statusFilter;
             var matchesCountry = countryFilter === '' || form.country === countryFilter;
@@ -174,7 +174,7 @@ $(document).ready(function() {
             return matchesSearch && matchesStatus && matchesCountry && matchesDate;
         });
         var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre</th><th>Fecha</th><th>Teléfono</th><th>País</th><th>Email</th><th>Estado</th><th>Archivos</th><th>Acciones</th></tr></thead><tbody>';
-        filteredData.forEach(function(form) {
+        filteredData.forEach(function (form) {
             var statusText = form.status === 1 ? 'Completado' : 'Pendiente';
             var statusIcon = form.status === 1 ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-exclamation-triangle text-warning"></i>';
             var statusDisplay = statusIcon + ' ' + statusText;
@@ -192,7 +192,7 @@ $(document).ready(function() {
     });
 
     // Save new form
-    $('#saveForm').click(function() {
+    $('#saveForm').click(function () {
         var name = $('#formName').val();
         var date = $('#formDate').val();
         var phone = $('#formPhone').val();
@@ -211,7 +211,7 @@ $(document).ready(function() {
                     country: country,
                     email: email
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -223,7 +223,7 @@ $(document).ready(function() {
                         loadFormularios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -241,7 +241,7 @@ $(document).ready(function() {
     });
 
     // Open edit form modal
-    window.openEditFormModal = function(id, name, date, phone, country, email) {
+    window.openEditFormModal = function (id, name, date, phone, country, email) {
         $('#editFormId').val(id);
         $('#editFormName').val(name);
         $('#editFormDate').val(date);
@@ -252,13 +252,13 @@ $(document).ready(function() {
     };
 
     // Open create file modal
-    window.openCreateFileModal = function(fkForm) {
+    window.openCreateFileModal = function (fkForm) {
         $('#fileFkForm').val(fkForm);
         $('#createFileModal').modal('show');
     };
 
     // Save new file
-    $('#saveFile').click(function() {
+    $('#saveFile').click(function () {
         var fkForm = $('#fileFkForm').val();
         var title = $('#fileTitle').val();
         if (title) {
@@ -270,7 +270,7 @@ $(document).ready(function() {
                     fk_form: fkForm,
                     title: title
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -282,7 +282,7 @@ $(document).ready(function() {
                         loadFormularios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -300,7 +300,7 @@ $(document).ready(function() {
     });
 
     // View files modal
-    window.viewFilesModal = function(idForm) {
+    window.viewFilesModal = function (idForm) {
         $('#viewFilesModalLabel').text('Archivos del Formulario ID: ' + idForm);
         $('#files-list').html('<p>Cargando archivos...</p>');
         $('#viewFilesModal').modal('show');
@@ -308,21 +308,21 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://fercoadvancededucation.com/php-ferco-files-ws/files/form/' + idForm,
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 1 && response.data.length > 0) {
                     var filesHtml = '<div class="list-group">';
-                    response.data.forEach(function(file) {
+                    response.data.forEach(function (file) {
                         var fileUrl = file.path ? '<a href="' + file.path + '" target="_blank" class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-download"></i> Descargar</a>' : '';
                         filesHtml += '<div class="list-group-item d-flex justify-content-between align-items-center">' +
                             '<div>' +
-                                '<strong>' + file.title + '</strong><br>' +
-                                '<small class="text-muted">Tipo: ' + (file.type || 'N/A') + ' | Descripción: ' + (file.description || 'N/A') + '</small>' +
+                            '<strong>' + file.title + '</strong><br>' +
+                            '<small class="text-muted">Tipo: ' + (file.type || 'N/A') + ' | Descripción: ' + (file.description || 'N/A') + '</small>' +
                             '</div>' +
                             '<div>' +
-                                fileUrl +
-                                '<button class="btn btn-sm btn-outline-danger" onclick="deleteFile(' + file.id_file + ')"><i class="fas fa-trash"></i></button>' +
+                            fileUrl +
+                            '<button class="btn btn-sm btn-outline-danger" onclick="deleteFile(' + file.id_file + ')"><i class="fas fa-trash"></i></button>' +
                             '</div>' +
-                        '</div>';
+                            '</div>';
                     });
                     filesHtml += '</div>';
                     $('#files-list').html(filesHtml);
@@ -330,14 +330,14 @@ $(document).ready(function() {
                     $('#files-list').html('<p>No hay archivos asociados a este formulario.</p>');
                 }
             },
-            error: function() {
+            error: function () {
                 $('#files-list').html('<p>Error al cargar archivos.</p>');
             }
         });
     };
 
     // Delete file
-    window.deleteFile = function(id) {
+    window.deleteFile = function (id) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: 'Esta acción eliminará el archivo permanentemente.',
@@ -352,7 +352,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'https://fercoadvancededucation.com/php-ferco-files-ws/files/' + id,
                     method: 'DELETE',
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             icon: response.status === 1 ? 'success' : 'error',
                             title: response.status === 1 ? 'Eliminado' : 'Error',
@@ -363,7 +363,7 @@ $(document).ready(function() {
                             loadFormularios(); // Reload the table
                         }
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -376,7 +376,7 @@ $(document).ready(function() {
     };
 
     // Share form modal
-    window.shareFormModal = function(idForm) {
+    window.shareFormModal = function (idForm) {
         var shareUrl = 'https://fercoadvancededucation.com/php-ferco-files-ws/up-file/index.html?id_form=' + idForm;
         $('#shareLink').val(shareUrl);
         // Store the form ID for WhatsApp sharing
@@ -385,17 +385,17 @@ $(document).ready(function() {
     };
 
     // Copy link to clipboard
-    $('#copyLink').click(function() {
+    $('#copyLink').click(function () {
         var copyText = document.getElementById('shareLink');
         copyText.select();
         copyText.setSelectionRange(0, 99999); // For mobile devices
-        navigator.clipboard.writeText(copyText.value).then(function() {
+        navigator.clipboard.writeText(copyText.value).then(function () {
             Swal.fire({
                 icon: 'success',
                 title: 'Copiado',
                 text: 'Enlace copiado al portapapeles.'
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
             console.error('Error al copiar: ', err);
             Swal.fire({
                 icon: 'error',
@@ -406,17 +406,17 @@ $(document).ready(function() {
     });
 
     // Open link in new window
-    $('#openLink').click(function() {
+    $('#openLink').click(function () {
         var url = $('#shareLink').val();
         window.open(url, '_blank');
     });
 
     // Share on WhatsApp
-    $('#shareWhatsApp').click(function() {
+    $('#shareWhatsApp').click(function () {
         var formId = $('#shareFormModal').data('formId');
         var shareUrl = $('#shareLink').val();
         // Find the phone number from formsData
-        var form = formsData.find(function(f) {
+        var form = formsData.find(function (f) {
             return f.id_form == formId;
         });
         if (form && form.phone) {
@@ -433,7 +433,7 @@ $(document).ready(function() {
     });
 
     // Update form
-    $('#updateForm').click(function() {
+    $('#updateForm').click(function () {
         var id = $('#editFormId').val();
         var name = $('#editFormName').val();
         var date = $('#editFormDate').val();
@@ -452,7 +452,7 @@ $(document).ready(function() {
                     country: country,
                     email: email
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -464,7 +464,7 @@ $(document).ready(function() {
                         loadFormularios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -482,7 +482,7 @@ $(document).ready(function() {
     });
 
     // Delete form
-    window.deleteForm = function(id) {
+    window.deleteForm = function (id) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: 'Esta acción no se puede deshacer.',
@@ -497,7 +497,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'https://fercoadvancededucation.com/php-ferco-files-ws/forms/' + id,
                     method: 'DELETE',
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             icon: response.status === 1 ? 'success' : 'error',
                             title: response.status === 1 ? 'Eliminado' : 'Error',
@@ -507,7 +507,7 @@ $(document).ready(function() {
                             loadFormularios(); // Reload the table
                         }
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -526,7 +526,7 @@ $(document).ready(function() {
     }
 
     // Logout functionality
-    $('#logoutBtn').click(function() {
+    $('#logoutBtn').click(function () {
         Swal.fire({
             title: '¿Cerrar sesión?',
             text: '¿Estás seguro de que quieres cerrar sesión?',
@@ -547,41 +547,41 @@ $(document).ready(function() {
     });
 
     // Event listeners for user search and filter
-    $(document).on('input', '#searchUserName', function() {
+    $(document).on('input', '#searchUserName', function () {
         renderUsersTable();
     });
-    $(document).on('change', '#filterRole', function() {
+    $(document).on('change', '#filterRole', function () {
         renderUsersTable();
     });
-    $(document).on('click', '#refreshUsersBtn', function() {
+    $(document).on('click', '#refreshUsersBtn', function () {
         loadUsuarios();
     });
 
     // Event listeners for pagos search and refresh
-    $(document).on('input', '#searchPago', function() {
+    $(document).on('input', '#searchPago', function () {
         renderPagosTable();
     });
-    $(document).on('click', '#refreshPagosBtn', function() {
+    $(document).on('click', '#refreshPagosBtn', function () {
         loadPagos();
     });
 
     // Event listeners for productos search and refresh
-    $(document).on('input', '#searchProducto', function() {
+    $(document).on('input', '#searchProducto', function () {
         renderProductosTable();
     });
-    $(document).on('click', '#refreshProductosBtn', function() {
+    $(document).on('click', '#refreshProductosBtn', function () {
         loadProductos();
     });
 
     // Render users table
     function renderUsersTable() {
         var searchTerm = $('#searchUserName').val().toLowerCase();
-        var filteredData = usersData.filter(function(user) {
+        var filteredData = usersData.filter(function (user) {
             var matchesSearch = user.fullname.toLowerCase().includes(searchTerm);
             return matchesSearch;
         });
         var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre Completo</th><th>Usuario</th><th>Estado</th><th>Rol</th></tr></thead><tbody>';
-        filteredData.forEach(function(user) {
+        filteredData.forEach(function (user) {
             var stateText = user.state === 1 ? 'Activo' : 'Inactivo';
             var rolText = user.rol === 1 ? 'Admin' : 'Usuario';
             table += '<tr><td>' + user.id_user + '</td><td>' + user.fullname + '</td><td>' + user.username + '</td><td>' + stateText + '</td><td>' + rolText + '</td></tr>';
@@ -593,11 +593,11 @@ $(document).ready(function() {
     // Render pagos table
     function renderPagosTable() {
         var searchTerm = $('#searchPago').val().toLowerCase();
-        var filteredData = pagosData.filter(function(pago) {
+        var filteredData = pagosData.filter(function (pago) {
             return pago.reference.toLowerCase().includes(searchTerm);
         });
         var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Referencia</th><th>Monto</th><th>Fecha</th></tr></thead><tbody>';
-        filteredData.forEach(function(pago) {
+        filteredData.forEach(function (pago) {
             table += '<tr><td>' + pago.id_pago + '</td><td>' + pago.reference + '</td><td>' + pago.amount + '</td><td>' + pago.date + '</td></tr>';
         });
         table += '</tbody></table>';
@@ -607,11 +607,11 @@ $(document).ready(function() {
     // Render productos cards
     function renderProductosTable() {
         var searchTerm = $('#searchProducto').val().toLowerCase();
-        var filteredData = productosData.filter(function(producto) {
+        var filteredData = productosData.filter(function (producto) {
             return producto.brand && producto.brand.toLowerCase().includes(searchTerm);
         });
         var cards = '<div class="row g-3">';
-        filteredData.forEach(function(producto) {
+        filteredData.forEach(function (producto) {
             cards += '<div class="col-lg-4 col-md-6 col-sm-12">' +
                 '<div class="card h-100 shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
@@ -640,7 +640,7 @@ $(document).ready(function() {
     }
 
     // Save new user
-    $('#saveUser').click(function() {
+    $('#saveUser').click(function () {
         var name = $('#newUserName').val();
         var email = $('#userEmail').val();
         var password = $('#userPassword').val();
@@ -654,7 +654,7 @@ $(document).ready(function() {
                     email: email,
                     password: password
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -666,7 +666,7 @@ $(document).ready(function() {
                         loadUsuarios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -684,7 +684,7 @@ $(document).ready(function() {
     });
 
     // Open edit user modal
-    window.openEditUserModal = function(id, name, email) {
+    window.openEditUserModal = function (id, name, email) {
         $('#editUserId').val(id);
         $('#editUserName').val(name);
         $('#editUserEmail').val(email);
@@ -692,13 +692,13 @@ $(document).ready(function() {
     };
 
     // Open change password modal
-    window.openChangePasswordModal = function(id) {
+    window.openChangePasswordModal = function (id) {
         $('#changePasswordUserId').val(id);
         $('#changePasswordModal').modal('show');
     };
 
     // Update password
-    $('#updatePassword').click(function() {
+    $('#updatePassword').click(function () {
         var id = $('#changePasswordUserId').val();
         var password = $('#newPassword').val();
         if (password && password.length >= 6) {
@@ -709,7 +709,7 @@ $(document).ready(function() {
                 data: JSON.stringify({
                     password: password
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -721,7 +721,7 @@ $(document).ready(function() {
                         loadUsuarios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -739,7 +739,7 @@ $(document).ready(function() {
     });
 
     // Update user
-    $('#updateUser').click(function() {
+    $('#updateUser').click(function () {
         var id = $('#editUserId').val();
         var name = $('#editUserName').val();
         var email = $('#editUserEmail').val();
@@ -752,7 +752,7 @@ $(document).ready(function() {
                     name: name,
                     email: email
                 }),
-                success: function(response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
@@ -764,7 +764,7 @@ $(document).ready(function() {
                         loadUsuarios(); // Reload the table
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -782,7 +782,7 @@ $(document).ready(function() {
     });
 
     // Send email form
-    window.sendEmailForm = function(id) {
+    window.sendEmailForm = function (id) {
         Swal.fire({
             title: '¿Enviar email?',
             text: 'Se enviará un email con el enlace del formulario.',
@@ -797,14 +797,14 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'https://fercoadvancededucation.com/php-ferco-files-ws/forms/' + id + '/send-email',
                     method: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             icon: response.status === 1 ? 'success' : 'error',
                             title: response.status === 1 ? 'Enviado' : 'Error',
                             text: response.message
                         });
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -817,7 +817,7 @@ $(document).ready(function() {
     };
 
     // Delete user
-    window.deleteUser = function(id) {
+    window.deleteUser = function (id) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: 'Esta acción no se puede deshacer.',
@@ -832,7 +832,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'https://fercoadvancededucation.com/php-ferco-files-ws/users/' + id,
                     method: 'DELETE',
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             icon: response.status === 1 ? 'success' : 'error',
                             title: response.status === 1 ? 'Eliminado' : 'Error',
@@ -842,7 +842,7 @@ $(document).ready(function() {
                             loadUsuarios(); // Reload the table
                         }
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -858,7 +858,7 @@ $(document).ready(function() {
     var importedProducts = [];
 
     // Preview products from Excel
-    $('#previewProducts').click(function() {
+    $('#previewProducts').click(function () {
         var fileInput = document.getElementById('excelFile');
         var file = fileInput.files[0];
         if (!file) {
@@ -874,12 +874,12 @@ $(document).ready(function() {
         $('#previewProducts').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
 
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             var data = new Uint8Array(e.target.result);
-            var workbook = XLSX.read(data, {type: 'array'});
+            var workbook = XLSX.read(data, { type: 'array' });
             var sheetName = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[sheetName];
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             // Assuming first row is headers: Código, Marca, Descripción, Stock, Costo, PVP, Mínimo, Aux
             if (jsonData.length < 2) {
@@ -904,14 +904,14 @@ $(document).ready(function() {
                         cost: parseFloat(row[4]) || 0,
                         pvp: parseFloat(row[5]) || 0,
                         min: parseInt(row[6]) || 0,
-                        aux: parseInt(row[7]) || 0
+                        aux: parseInt(row[7]) || 0,
                     });
                 }
             }
 
             // Render preview table rows only (headers are already in HTML)
             var rowsHtml = '';
-            importedProducts.forEach(function(product) {
+            importedProducts.forEach(function (product) {
                 rowsHtml += '<tr><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
             });
             $('#productsTableBody').html(rowsHtml);
@@ -926,7 +926,7 @@ $(document).ready(function() {
     });
 
     // Clear preview
-    $('#clearPreview').click(function() {
+    $('#clearPreview').click(function () {
         importedProducts = [];
         $('#productsTableBody').html('');
         $('#productsPreview').hide();
@@ -936,7 +936,7 @@ $(document).ready(function() {
     });
 
     // Import products
-    $('#importProducts').click(function() {
+    $('#importProducts').click(function () {
         if (importedProducts.length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -951,8 +951,8 @@ $(document).ready(function() {
             url: 'https://nestorcornejo.com/macguiver-inventarios/products/bulk',
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({products: importedProducts}),
-            success: function(response) {
+            data: JSON.stringify({ products: importedProducts }),
+            success: function (response) {
                 Swal.fire({
                     icon: response.status === 1 ? 'success' : 'error',
                     title: response.status === 1 ? 'Éxito' : 'Error',
@@ -967,7 +967,7 @@ $(document).ready(function() {
                     loadProductos(); // Reload the products table
                 }
             },
-            error: function() {
+            error: function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
