@@ -870,6 +870,9 @@ $(document).ready(function() {
             return;
         }
 
+        // Show loading spinner
+        $('#previewProducts').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+
         var reader = new FileReader();
         reader.onload = function(e) {
             var data = new Uint8Array(e.target.result);
@@ -885,6 +888,7 @@ $(document).ready(function() {
                     title: 'Error',
                     text: 'El archivo Excel debe contener al menos una fila de datos.'
                 });
+                $('#previewProducts').prop('disabled', false).html('Vista Previa');
                 return;
             }
 
@@ -905,17 +909,30 @@ $(document).ready(function() {
                 }
             }
 
-            // Render preview table
-            var tableHtml = '<table class="table table-striped"><thead><tr><th>Código</th><th>Marca</th><th>Descripción</th><th>Stock</th><th>Costo</th><th>PVP</th><th>Mínimo</th><th>Aux</th></tr></thead><tbody>';
+            // Render preview table rows only (headers are already in HTML)
+            var rowsHtml = '';
             importedProducts.forEach(function(product) {
-                tableHtml += '<tr><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
+                rowsHtml += '<tr><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
             });
-            tableHtml += '</tbody></table>';
-            $('#productsTableBody').html(tableHtml);
+            $('#productsTableBody').html(rowsHtml);
             $('#productsPreview').show();
             $('#importProducts').show();
+            $('#clearPreview').show();
+
+            // Hide loading spinner
+            $('#previewProducts').prop('disabled', false).html('Vista Previa');
         };
         reader.readAsArrayBuffer(file);
+    });
+
+    // Clear preview
+    $('#clearPreview').click(function() {
+        importedProducts = [];
+        $('#productsTableBody').html('');
+        $('#productsPreview').hide();
+        $('#importProducts').hide();
+        $('#clearPreview').hide();
+        $('#excelFile').val('');
     });
 
     // Import products
