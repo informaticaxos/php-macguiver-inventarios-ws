@@ -85,7 +85,28 @@ class ProductController
     }
 
     /**
-     * Importa productos desde datos JSON enviados por POST
+     * Importa productos en masa desde datos JSON enviados por POST
+     */
+    public function bulkImport()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (!$data || !isset($data['products'])) {
+            $this->sendResponse(400, 0, 'Invalid JSON data or missing products array', null);
+            return;
+        }
+
+        // Ejecutar importación masiva con los datos enviados
+        $result = $this->service->bulkImportProducts($data['products']);
+
+        if ($result['success']) {
+            $this->sendResponse(200, 1, 'Products imported successfully', $result);
+        } else {
+            $this->sendResponse(500, 0, 'Import failed: ' . $result['message'], null);
+        }
+    }
+
+    /**
+     * Importa productos desde datos JSON enviados por POST (método antiguo, mantener por compatibilidad)
      */
     public function import()
     {

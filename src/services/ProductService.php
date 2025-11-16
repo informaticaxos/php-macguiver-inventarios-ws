@@ -189,6 +189,87 @@ class ProductService
     }
 
     /**
+     * Importa productos en masa de manera eficiente
+     *
+     * @param array $productsData
+     * @return array
+     */
+    public function bulkImportProducts($productsData)
+    {
+        if (!is_array($productsData)) {
+            return ['success' => false, 'message' => 'Invalid products data'];
+        }
+
+        $products = $productsData;
+        $total = count($products);
+
+        if ($total === 0) {
+            return ['success' => false, 'message' => 'No products to import'];
+        }
+
+        // Filtrar productos válidos y verificar duplicados
+        $validProducts = [];
+        $errors = [];
+
+        foreach ($products as $index => $productData) {
+            try {
+                // Validar datos básicos
+                if (empty($productData['code'])) {
+                    $errors[] = 'Missing code for product at row ' . ($index + 1);
+                    continue;
+                }
+
+                // Validar aux: debe ser string no vacío y único
+                if (!isset($productData['aux']) || !is_string($productData['aux']) || empty($productData['aux'])) {
+                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be non-empty string';
+                    continue;
+                }
+
+                // Verificar si code ya existe
+                if ($this->repository->findByCode($productData['code'])) {
+                    // Skip existing products
+                    continue;
+                }
+
+                // Verificar si aux ya existe
+                if ($this->repository->findByAux($productData['aux'])) {
+                    // Skip existing products
+                    continue;
+                }
+
+                // Agregar producto válido
+                $validProducts[] = [
+                    'brand' => $productData['brand'] ?? '',
+                    'description' => $productData['description'] ?? '',
+                    'stock' => $productData['stock'] ?? 0,
+                    'cost' => $productData['cost'] ?? 0.0,
+                    'pvp' => $productData['pvp'] ?? 0.0,
+                    'min' => $productData['min'] ?? 0,
+                    'code' => $productData['code'],
+                    'aux' => $productData['aux']
+                ];
+
+            } catch (Exception $e) {
+                $errors[] = 'Error validating product ' . ($productData['code'] ?? 'unknown') . ': ' . $e->getMessage();
+            }
+        }
+
+        $imported = 0;
+        if (!empty($validProducts)) {
+            // Usar inserción masiva
+            $imported = $this->repository->bulkSave($validProducts);
+        }
+
+        return [
+            'success' => true,
+            'imported' => $imported,
+            'skipped' => $total - count($validProducts) - count($errors),
+            'errors' => $errors,
+            'total' => $total
+        ];
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

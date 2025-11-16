@@ -1,6 +1,6 @@
-# TODO: Update Product Model and Service for New Schema
-
-## Tasks
-- [x] Update ProductModel.php: Change 'aux' property to string, 'stock' to int, update constructor, getters, and setters.
-- [x] Update ProductService.php: Change validation for 'aux' to non-empty string and unique in createProduct, updateProduct, and importProductsFromData methods.
-- [x] Test POST /products endpoint to ensure creation works with updated structure.
+- [x] Agregar nueva ruta 'POST /products/bulk-import' en ProductRoute.php
+- [x] Implementar método bulkImport en ProductController.php
+- [x] Implementar método bulkImportProducts en ProductService.php con transacción e inserción masiva
+- [x] Agregar método bulkSave en ProductRepository.php para inserciones eficientes
+- [x] Actualizar frontend/index.js para enviar todos los productos al nuevo endpoint en una sola solicitud
+- [x] Probar el nuevo endpoint para asegurar que funcione sin bloquear el servidor

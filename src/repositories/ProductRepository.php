@@ -108,6 +108,48 @@ class ProductRepository
     }
 
     /**
+     * Guarda múltiples productos de manera eficiente usando transacciones
+     *
+     * @param array $products
+     * @return int Número de productos insertados
+     */
+    public function bulkSave($products)
+    {
+        if (empty($products)) {
+            return 0;
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            // Preparar la consulta de inserción
+            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+            $inserted = 0;
+            foreach ($products as $product) {
+                $stmt->execute([
+                    $product['brand'],
+                    $product['description'],
+                    $product['stock'],
+                    $product['cost'],
+                    $product['pvp'],
+                    $product['min'],
+                    $product['code'],
+                    $product['aux']
+                ]);
+                $inserted++;
+            }
+
+            $this->pdo->commit();
+            return $inserted;
+
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

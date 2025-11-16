@@ -951,21 +951,32 @@ $(document).ready(function () {
         $('#importProducts').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importando...');
         $('#progressBar').show().css('width', '0%').text('0%');
 
-        var total = importedProducts.length;
-        var current = 0;
-        var errors = 0;
-
-        function importNext() {
-            if (current >= total) {
-                // All done
+        // Usar importación masiva en lugar de individual
+        $.ajax({
+            url: 'https://nestorcornejo.com/macguiver-inventarios/products/bulk-import',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ products: importedProducts }),
+            success: function (response) {
                 $('#importProducts').prop('disabled', false).html('Importar Productos');
                 $('#progressBar').css('width', '100%').text('100%');
-                if (errors === 0) {
+
+                if (response.status === 1) {
+                    var data = response.data;
+                    var message = 'Importación completada. ' + data.imported + ' productos importados.';
+                    if (data.skipped > 0) {
+                        message += ' ' + data.skipped + ' productos omitidos (ya existen).';
+                    }
+                    if (data.errors.length > 0) {
+                        message += ' ' + data.errors.length + ' errores encontrados.';
+                    }
+
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Éxito',
-                        text: 'Todos los productos han sido importados.'
+                        icon: data.errors.length === 0 ? 'success' : 'warning',
+                        title: 'Importación completada',
+                        text: message
                     });
+
                     $('#importProductsModal').modal('hide');
                     $('#excelFile').val('');
                     $('#productsPreview').hide();
@@ -975,43 +986,20 @@ $(document).ready(function () {
                     loadProductos(); // Reload the products table
                 } else {
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Importación completada con errores',
-                        text: errors + ' productos no pudieron ser importados.'
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message
                     });
                 }
-                return;
+            },
+            error: function () {
+                $('#importProducts').prop('disabled', false).html('Importar Productos');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al importar productos.'
+                });
             }
-
-            var product = importedProducts[current];
-            $.ajax({
-                url: 'https://nestorcornejo.com/macguiver-inventarios/products',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(product),
-                success: function (response) {
-                    if (response.status === 1) {
-                        $('#status-' + current).html('<i class="fas fa-check text-success"></i> Importado');
-                    } else {
-                        $('#status-' + current).html('<i class="fas fa-times text-danger"></i> Error');
-                        errors++;
-                    }
-                    current++;
-                    var percent = (current / total) * 100;
-                    $('#progressBar').css('width', percent + '%').text(Math.round(percent) + '%');
-                    importNext();
-                },
-                error: function () {
-                    $('#status-' + current).html('<i class="fas fa-times text-danger"></i> Error');
-                    errors++;
-                    current++;
-                    var percent = (current / total) * 100;
-                    $('#progressBar').css('width', percent + '%').text(Math.round(percent) + '%');
-                    importNext();
-                }
-            });
-        }
-
-        importNext();
+        });
     });
 });
