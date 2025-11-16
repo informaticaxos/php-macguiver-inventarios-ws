@@ -898,13 +898,13 @@ $(document).ready(function() {
                 if (row.length >= 8) {
                     importedProducts.push({
                         code: row[0] || '',
-                        aux: parseInt(row[1]) || 0,
+                        brand: row[1] || '',
                         description: row[2] || '',
-                        stock: parseInt(row[4]) || 0,
-                        cost: parseFloat(row[5]) || 0,
-                        pvp: parseFloat(row[6]) || 0,
-                        min: parseInt(row[7]) || 0,
-                        brand: row[3] || ''
+                        stock: parseInt(row[3]) || 0,
+                        cost: parseFloat(row[4]) || 0,
+                        pvp: parseFloat(row[5]) || 0,
+                        min: parseInt(row[6]) || 0,
+                        aux: parseInt(row[7]) || 0
                     });
                 }
             }
