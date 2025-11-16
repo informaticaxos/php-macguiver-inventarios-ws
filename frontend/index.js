@@ -898,27 +898,27 @@ $(document).ready(function () {
                 if (row.length >= 8) {
                     importedProducts.push({
                         code: row[0] || '',
-                        aux: (row[1]) || 0,
+                        brand: row[1] || '',
                         description: row[2] || '',
-                        brand: row[3] || '',
-                        stock: parseInt(row[4]) || 0,
-                        cost: parseFloat(row[5]) || 0,
-                        pvp: parseFloat(row[6]) || 0,
-                        min: parseInt(row[7]) || 0,
-
+                        stock: parseInt(row[3]) || 0,
+                        cost: parseFloat(row[4]) || 0,
+                        pvp: parseFloat(row[5]) || 0,
+                        min: parseInt(row[6]) || 0,
+                        aux: parseInt(row[7]) || 0
                     });
                 }
             }
 
             // Render preview table rows only (headers are already in HTML)
             var rowsHtml = '';
-            importedProducts.forEach(function (product) {
-                rowsHtml += '<tr><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td></tr>';
+            importedProducts.forEach(function (product, index) {
+                rowsHtml += '<tr id="product-row-' + index + '"><td>' + product.code + '</td><td>' + product.brand + '</td><td>' + product.description + '</td><td>' + product.stock + '</td><td>' + product.cost + '</td><td>' + product.pvp + '</td><td>' + product.min + '</td><td>' + product.aux + '</td><td id="status-' + index + '"><i class="fas fa-clock text-warning"></i> Pendiente</td></tr>';
             });
             $('#productsTableBody').html(rowsHtml);
             $('#productsPreview').show();
-            $('#importProducts').show();
+            $('#saveProducts').show();
             $('#clearPreview').show();
+            $('#progressBar').show().css('width', '0%').text('0%');
 
             // Hide loading spinner
             $('#previewProducts').prop('disabled', false).html('Vista Previa');
@@ -947,34 +947,71 @@ $(document).ready(function () {
             return;
         }
 
-        // Send products to server
-        $.ajax({
-            url: 'https://nestorcornejo.com/macguiver-inventarios/products/bulk',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ products: importedProducts }),
-            success: function (response) {
-                Swal.fire({
-                    icon: response.status === 1 ? 'success' : 'error',
-                    title: response.status === 1 ? 'Éxito' : 'Error',
-                    text: response.message
-                });
-                if (response.status === 1) {
+        // Disable button and show progress
+        $('#importProducts').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importando...');
+        $('#progressBar').show().css('width', '0%').text('0%');
+
+        var total = importedProducts.length;
+        var current = 0;
+        var errors = 0;
+
+        function importNext() {
+            if (current >= total) {
+                // All done
+                $('#importProducts').prop('disabled', false).html('Importar Productos');
+                $('#progressBar').css('width', '100%').text('100%');
+                if (errors === 0) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Todos los productos han sido importados.'
+                    });
                     $('#importProductsModal').modal('hide');
                     $('#excelFile').val('');
                     $('#productsPreview').hide();
-                    $('#importProducts').hide();
+                    $('#saveProducts').hide();
+                    $('#clearPreview').hide();
                     importedProducts = [];
                     loadProductos(); // Reload the products table
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Importación completada con errores',
+                        text: errors + ' productos no pudieron ser importados.'
+                    });
                 }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error de conexión.'
-                });
+                return;
             }
-        });
+
+            var product = importedProducts[current];
+            $.ajax({
+                url: 'https://nestorcornejo.com/macguiver-inventarios/products',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(product),
+                success: function (response) {
+                    if (response.status === 1) {
+                        $('#status-' + current).html('<i class="fas fa-check text-success"></i> Importado');
+                    } else {
+                        $('#status-' + current).html('<i class="fas fa-times text-danger"></i> Error');
+                        errors++;
+                    }
+                    current++;
+                    var percent = (current / total) * 100;
+                    $('#progressBar').css('width', percent + '%').text(Math.round(percent) + '%');
+                    importNext();
+                },
+                error: function () {
+                    $('#status-' + current).html('<i class="fas fa-times text-danger"></i> Error');
+                    errors++;
+                    current++;
+                    var percent = (current / total) * 100;
+                    $('#progressBar').css('width', percent + '%').text(Math.round(percent) + '%');
+                    importNext();
+                }
+            });
+        }
+
+        importNext();
     });
 });
