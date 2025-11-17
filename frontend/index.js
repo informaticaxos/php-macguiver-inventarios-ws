@@ -59,6 +59,7 @@ $(document).ready(function () {
                 localStorage.removeItem('loggedIn');
                 localStorage.removeItem('user');
                 localStorage.removeItem('userId');
+                localStorage.removeItem('role');
                 window.location.href = 'login.html';
             }
         });
@@ -67,6 +68,9 @@ $(document).ready(function () {
     // Display user name
     var userName = localStorage.getItem('user') || 'Usuario';
     $('#userName').text(userName);
+
+    // Get user role
+    var userRole = localStorage.getItem('role') || 2; // Default to user role if not set
 
     // Search functionality
     $(document).on('keyup', '#searchProducto', function() {
@@ -109,13 +113,17 @@ $(document).ready(function () {
         });
         var cards = '<div class="row g-3">';
         filteredData.forEach(function (producto) {
+            var productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
+            if (userRole == 1) { // Admin role
+                productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
+            }
             cards += '<div class="col-4">' +
                 '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
                 '<h5 class="card-title mb-0">' + (producto.code || 'N/A') + ' | ' + (producto.description || 'N/A') + '</h5>' +
                 '</div>' +
                 '<div class="card-body">' +
-                '<p class="card-text mb-0"><strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small></p>' +
+                '<p class="card-text mb-0">' + productInfo + '</p>' +
                 '</div>' +
                 '</div>' +
                 '</div>';

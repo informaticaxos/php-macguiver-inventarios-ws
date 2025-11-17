@@ -114,6 +114,7 @@
                             localStorage.setItem('loggedIn', 'true');
                             localStorage.setItem('user', response.data.name);
                             localStorage.setItem('userId', response.data.id_user);
+                            localStorage.setItem('role', response.data.rol);
 
                             Swal.fire({
                                 icon: 'success',
