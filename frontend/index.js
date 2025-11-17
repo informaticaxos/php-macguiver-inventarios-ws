@@ -282,7 +282,7 @@ $(document).ready(function () {
             var stateText = usuario.state == 1 ? 'Activo' : 'Inactivo';
             var stateClass = usuario.state == 1 ? 'badge bg-success' : 'badge bg-danger';
             var rolText = usuario.rol == 1 ? 'Admin' : 'Usuario';
-            table += '<tr><td>' + usuario.id_user + '</td><td>' + (usuario.fullname || 'N/A') + '</td><td>' + (usuario.username || 'N/A') + '</td><td><span class="' + stateClass + '">' + stateText + '</span></td><td>' + rolText + '</td><td><button class="btn btn-sm btn-warning" onclick="openEditUserModal(' + usuario.id_user + ', \'' + (usuario.fullname || '') + '\', \'' + (usuario.username || '') + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-danger" onclick="deleteUser(' + usuario.id_user + ')"><i class="fas fa-trash"></i></button><button class="btn btn-sm btn-info" onclick="openChangePasswordModal(' + usuario.id_user + ')"><i class="fas fa-key"></i></button></td></tr>';
+            table += '<tr><td>' + usuario.id_user + '</td><td>' + (usuario.fullname || 'N/A') + '</td><td>' + (usuario.username || 'N/A') + '</td><td><span class="' + stateClass + '">' + stateText + '</span></td><td>' + rolText + '</td><td><button class="btn btn-sm btn-warning" onclick="openEditUserModal(' + usuario.id_user + ', \'' + (usuario.fullname || '') + '\', \'' + (usuario.username || '') + '\', ' + usuario.rol + ')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-danger" onclick="deleteUser(' + usuario.id_user + ')"><i class="fas fa-trash"></i></button><button class="btn btn-sm btn-info" onclick="openChangePasswordModal(' + usuario.id_user + ')"><i class="fas fa-key"></i></button></td></tr>';
         });
         table += '</tbody></table>';
         $('#usuarios-table').html(table);
@@ -335,10 +335,11 @@ $(document).ready(function () {
     });
 
     // Open edit user modal
-    window.openEditUserModal = function (id, fullname, username) {
+    window.openEditUserModal = function (id, fullname, username, rol) {
         $('#editUserId').val(id);
         $('#editUserFullname').val(fullname);
         $('#editUserUsername').val(username);
+        $('#editUserRol').val(rol);
         $('#editUserModal').modal('show');
     };
 
