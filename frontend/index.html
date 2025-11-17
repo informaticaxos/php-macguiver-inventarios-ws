@@ -456,6 +456,58 @@
         </div>
     </div>
 
+    <!-- Modal for creating new product -->
+    <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createProductModalLabel">Crear Nuevo Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createProductForm">
+                        <div class="mb-3">
+                            <label for="productBrand" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="productBrand" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="productDescription" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productStock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="productStock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCost" class="form-label">Costo</label>
+                            <input type="number" step="0.01" class="form-control" id="productCost" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPvp" class="form-label">PVP</label>
+                            <input type="number" step="0.01" class="form-control" id="productPvp" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productMin" class="form-label">Mínimo</label>
+                            <input type="number" class="form-control" id="productMin" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCode" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="productCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productAux" class="form-label">Aux</label>
+                            <input type="text" class="form-control" id="productAux" readonly>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-xs" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary btn-xs" id="saveProduct">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for importing products from Excel -->
     <div class="modal fade" id="importProductsModal" tabindex="-1" aria-labelledby="importProductsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">

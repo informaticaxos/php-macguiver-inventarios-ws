@@ -109,7 +109,7 @@ $(document).ready(function () {
 
     // Load productos
     function loadProductos() {
-        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         $.ajax({
             url: 'https://nestorcornejo.com/macguiver-inventarios/products',
             method: 'GET',
@@ -990,5 +990,79 @@ $(document).ready(function () {
                 });
             }
         });
+    });
+
+    // Create product modal show event
+    $('#createProductModal').on('show.bs.modal', function () {
+        // Fetch max_aux and set aux field
+        $.ajax({
+            url: 'https://nestorcornejo.com/macguiver-inventarios/products/max-aux',
+            method: 'GET',
+            success: function (response) {
+                if (response.status === 1) {
+                    var maxAux = response.data.max_aux || 0;
+                    $('#productAux').val(maxAux + 1);
+                } else {
+                    $('#productAux').val(1); // Default to 1 if error
+                }
+            },
+            error: function () {
+                $('#productAux').val(1); // Default to 1 if error
+            }
+        });
+    });
+
+    // Save new product
+    $('#saveProduct').click(function () {
+        var brand = $('#productBrand').val();
+        var description = $('#productDescription').val();
+        var stock = $('#productStock').val();
+        var cost = $('#productCost').val();
+        var pvp = $('#productPvp').val();
+        var min = $('#productMin').val();
+        var code = $('#productCode').val();
+        var aux = $('#productAux').val();
+        if (brand && description && stock && cost && pvp && min && code && aux) {
+            $.ajax({
+                url: 'https://nestorcornejo.com/macguiver-inventarios/products',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    brand: brand,
+                    description: description,
+                    stock: parseInt(stock),
+                    cost: parseFloat(cost),
+                    pvp: parseFloat(pvp),
+                    min: parseInt(min),
+                    code: code,
+                    aux: aux
+                }),
+                success: function (response) {
+                    Swal.fire({
+                        icon: response.status === 1 ? 'success' : 'error',
+                        title: response.status === 1 ? 'Éxito' : 'Error',
+                        text: response.message
+                    });
+                    if (response.status === 1) {
+                        $('#createProductModal').modal('hide');
+                        $('#createProductForm')[0].reset();
+                        loadProductos(); // Reload the products table
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de conexión.'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos requeridos',
+                text: 'Por favor, complete todos los campos.'
+            });
+        }
     });
 });
