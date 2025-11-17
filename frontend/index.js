@@ -82,11 +82,50 @@ $(document).ready(function () {
         renderUsuariosTable();
     });
 
+    // Button event handlers
+    $(document).on('click', '#viewProductosListBtn', function() {
+        loadProductosList();
+    });
+
+    $(document).on('click', '#backToStatsBtn', function() {
+        loadProductosStats();
+    });
+
+    $(document).on('click', '#refreshProductosBtn', function() {
+        loadProductosStats();
+    });
 
 
-    // Load productos
+
+    // Load productos stats by default
     function loadProductos() {
-        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button><button id="viewProductosListBtn" class="btn btn-primary btn-sm"><i class="fas fa-list"></i> Ver Lista de Productos</button></div></div><div id="productos-content" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        loadProductosStats();
+    }
+
+    // Load productos stats
+    function loadProductosStats() {
+        $.ajax({
+            url: API_PRODUCTS_LIST.replace('/products', '/products/stats'),
+            method: 'GET',
+            success: function (response) {
+                if (response.status === 1) {
+                    var stats = response.data;
+                    var statsHtml = '<div class="row justify-content-center"><div class="col-md-6"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Información del Módulo de Productos</h5></div><div class="card-body"><div class="row"><div class="col-6"><h4 class="text-primary">' + (stats.total_products || 0) + '</h4><p class="mb-0">Total de Productos Registrados</p></div><div class="col-6"><h4 class="text-success">$' + (stats.total_value || 0) + '</h4><p class="mb-0">Valor Total del Inventario</p></div></div></div></div></div></div>';
+                    $('#productos-content').html(statsHtml);
+                } else {
+                    $('#productos-content').html('<p>Error al cargar estadísticas: ' + response.message + '</p>');
+                }
+            },
+            error: function () {
+                $('#productos-content').html('<p>Error de conexión.</p>');
+            }
+        });
+    }
+
+    // Load productos list
+    function loadProductosList() {
+        $('#productos-content').html('<div class="d-flex mb-3"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"><button id="backToStatsBtn" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Volver a Estadísticas</button></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         $.ajax({
             url: API_PRODUCTS_LIST,
             method: 'GET',
