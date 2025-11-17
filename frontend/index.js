@@ -43,6 +43,15 @@ $(document).ready(function () {
         }
     }
 
+    // Search functionality
+    $(document).on('keyup', '#searchProducto', function() {
+        renderProductosTable();
+    });
+
+    $(document).on('keyup', '#searchUsuario', function() {
+        renderUsuariosTable();
+    });
+
 
 
     // Load productos
