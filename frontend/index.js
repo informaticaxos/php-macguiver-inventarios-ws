@@ -13,7 +13,15 @@ $(document).ready(function () {
     const API_PRODUCTS_CREATE = API_BASE_INVENTARIOS + '/products'; // POST: Crear nuevo producto
     const API_PRODUCTS_BULK_IMPORT = API_BASE_INVENTARIOS + '/products/bulk-import'; // POST: Importar productos en masa desde Excel
 
+    // Users API Endpoints
+    const API_USERS_LIST = API_BASE_INVENTARIOS + '/users'; // GET: Obtener lista de usuarios
+    const API_USERS_CREATE = API_BASE_INVENTARIOS + '/users'; // POST: Crear nuevo usuario
+    const API_USERS_UPDATE = API_BASE_INVENTARIOS + '/users'; // PUT: Actualizar usuario
+    const API_USERS_UPDATE_PASSWORD = API_BASE_INVENTARIOS + '/users'; // PUT: Cambiar contraseña
+    const API_USERS_DELETE = API_BASE_INVENTARIOS + '/users'; // DELETE: Eliminar usuario
+
     var productosData = []; // Store the productos data globally
+    var usersData = []; // Store the users data globally
 
     // Handle sidebar navigation
     $('.sidebar .nav-link, .offcanvas .nav-link').click(function (e) {
@@ -30,6 +38,8 @@ $(document).ready(function () {
     function loadSection(section) {
         if (section === 'productos') {
             loadProductos();
+        } else if (section === 'usuarios') {
+            loadUsuarios();
         }
     }
 
@@ -81,220 +91,7 @@ $(document).ready(function () {
         $('#productos-table').html(cards);
     }
 
-    // Save new user
-    $('#saveUser').click(function () {
-        var name = $('#newUserName').val();
-        var email = $('#userEmail').val();
-        var password = $('#userPassword').val();
-        if (name && email && password) {
-            $.ajax({
-                url: API_USERS_CREATE,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                }),
-                success: function (response) {
-                    Swal.fire({
-                        icon: response.status === 1 ? 'success' : 'error',
-                        title: response.status === 1 ? 'Éxito' : 'Error',
-                        text: response.message
-                    });
-                    if (response.status === 1) {
-                        $('#createUserModal').modal('hide');
-                        $('#createUserForm')[0].reset();
-                        loadUsuarios(); // Reload the table
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error de conexión.'
-                    });
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos requeridos',
-                text: 'Por favor, complete todos los campos.'
-            });
-        }
-    });
 
-    // Open edit user modal
-    window.openEditUserModal = function (id, name, email) {
-        $('#editUserId').val(id);
-        $('#editUserName').val(name);
-        $('#editUserEmail').val(email);
-        $('#editUserModal').modal('show');
-    };
-
-    // Open change password modal
-    window.openChangePasswordModal = function (id) {
-        $('#changePasswordUserId').val(id);
-        $('#changePasswordModal').modal('show');
-    };
-
-    // Update password
-    $('#updatePassword').click(function () {
-        var id = $('#changePasswordUserId').val();
-        var password = $('#newPassword').val();
-        if (password && password.length >= 6) {
-            $.ajax({
-                url: API_USERS_UPDATE_PASSWORD + id + '/password',
-                method: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    password: password
-                }),
-                success: function (response) {
-                    Swal.fire({
-                        icon: response.status === 1 ? 'success' : 'error',
-                        title: response.status === 1 ? 'Éxito' : 'Error',
-                        text: response.message
-                    });
-                    if (response.status === 1) {
-                        $('#changePasswordModal').modal('hide');
-                        $('#changePasswordForm')[0].reset();
-                        loadUsuarios(); // Reload the table
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error de conexión.'
-                    });
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Contraseña inválida',
-                text: 'La contraseña debe tener al menos 6 caracteres.'
-            });
-        }
-    });
-
-    // Update user
-    $('#updateUser').click(function () {
-        var id = $('#editUserId').val();
-        var name = $('#editUserName').val();
-        var email = $('#editUserEmail').val();
-        if (name && email) {
-            $.ajax({
-                url: API_USERS_UPDATE + id,
-                method: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    name: name,
-                    email: email
-                }),
-                success: function (response) {
-                    Swal.fire({
-                        icon: response.status === 1 ? 'success' : 'error',
-                        title: response.status === 1 ? 'Éxito' : 'Error',
-                        text: response.message
-                    });
-                    if (response.status === 1) {
-                        $('#editUserModal').modal('hide');
-                        $('#editUserForm')[0].reset();
-                        loadUsuarios(); // Reload the table
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error de conexión.'
-                    });
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos requeridos',
-                text: 'Por favor, complete todos los campos.'
-            });
-        }
-    });
-
-    // Send email form
-    window.sendEmailForm = function (id) {
-        Swal.fire({
-            title: '¿Enviar email?',
-            text: 'Se enviará un email con el enlace del formulario.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#007bff',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Sí, enviar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: API_FORMS_SEND_EMAIL + id + '/send-email',
-                    method: 'POST',
-                    success: function (response) {
-                        Swal.fire({
-                            icon: response.status === 1 ? 'success' : 'error',
-                            title: response.status === 1 ? 'Enviado' : 'Error',
-                            text: response.message
-                        });
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error de conexión.'
-                        });
-                    }
-                });
-            }
-        });
-    };
-
-    // Delete user
-    window.deleteUser = function (id) {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: API_USERS_DELETE + id,
-                    method: 'DELETE',
-                    success: function (response) {
-                        Swal.fire({
-                            icon: response.status === 1 ? 'success' : 'error',
-                            title: response.status === 1 ? 'Eliminado' : 'Error',
-                            text: response.message
-                        });
-                        if (response.status === 1) {
-                            loadUsuarios(); // Reload the table
-                        }
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error de conexión.'
-                        });
-                    }
-                });
-            }
-        });
-    };
 
     // Import products from Excel
     var importedProducts = [];
@@ -442,7 +239,226 @@ $(document).ready(function () {
                     text: 'Error al importar productos.'
                 });
             }
+    });
+
+    // Load usuarios
+    function loadUsuarios() {
+        $('#content-area').html('<h2>Usuarios</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchUsuario" class="form-control form-control-sm me-2" placeholder="Buscar por nombre"></div><div class="d-flex gap-2"><button id="refreshUsuariosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createUserModal"><i class="fas fa-plus"></i> Nuevo Usuario</button></div></div><div id="usuarios-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $.ajax({
+            url: API_USERS_LIST,
+            method: 'GET',
+            success: function (response) {
+                if (response.status === 1) {
+                    usersData = response.data; // Store the data
+                    renderUsuariosTable();
+                } else {
+                    $('#usuarios-table').html('<p>Error al cargar usuarios: ' + response.message + '</p>');
+                }
+            },
+            error: function () {
+                $('#usuarios-table').html('<p>Error de conexión.</p>');
+            }
         });
+    }
+
+    // Render usuarios table
+    function renderUsuariosTable() {
+        var searchTerm = $('#searchUsuario').val().toLowerCase();
+        var filteredData = usersData.filter(function (usuario) {
+            return usuario.fullname && usuario.fullname.toLowerCase().includes(searchTerm);
+        });
+        var table = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nombre Completo</th><th>Usuario</th><th>Estado</th><th>Rol</th><th>Acciones</th></tr></thead><tbody>';
+        filteredData.forEach(function (usuario) {
+            var stateText = usuario.state == 1 ? 'Activo' : 'Inactivo';
+            var stateClass = usuario.state == 1 ? 'badge bg-success' : 'badge bg-danger';
+            var rolText = usuario.rol == 1 ? 'Admin' : 'Usuario';
+            table += '<tr><td>' + usuario.id_user + '</td><td>' + (usuario.fullname || 'N/A') + '</td><td>' + (usuario.username || 'N/A') + '</td><td><span class="' + stateClass + '">' + stateText + '</span></td><td>' + rolText + '</td><td><button class="btn btn-sm btn-warning" onclick="openEditUserModal(' + usuario.id_user + ', \'' + (usuario.fullname || '') + '\', \'' + (usuario.username || '') + '\')"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-danger" onclick="deleteUser(' + usuario.id_user + ')"><i class="fas fa-trash"></i></button><button class="btn btn-sm btn-info" onclick="openChangePasswordModal(' + usuario.id_user + ')"><i class="fas fa-key"></i></button></td></tr>';
+        });
+        table += '</tbody></table>';
+        $('#usuarios-table').html(table);
+    }
+
+    // Save new user
+    $('#saveUser').click(function () {
+        var fullname = $('#newUserFullname').val();
+        var username = $('#newUserUsername').val();
+        var password = $('#newUserPassword').val();
+        var rol = $('#newUserRol').val();
+        if (fullname && username && password && rol) {
+            $.ajax({
+                url: API_USERS_CREATE,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    fullname: fullname,
+                    username: username,
+                    password: password,
+                    rol: parseInt(rol)
+                }),
+                success: function (response) {
+                    Swal.fire({
+                        icon: response.status === 1 ? 'success' : 'error',
+                        title: response.status === 1 ? 'Éxito' : 'Error',
+                        text: response.message
+                    });
+                    if (response.status === 1) {
+                        $('#createUserModal').modal('hide');
+                        $('#createUserForm')[0].reset();
+                        loadUsuarios(); // Reload the table
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de conexión.'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos requeridos',
+                text: 'Por favor, complete todos los campos.'
+            });
+        }
+    });
+
+    // Open edit user modal
+    window.openEditUserModal = function (id, fullname, username) {
+        $('#editUserId').val(id);
+        $('#editUserFullname').val(fullname);
+        $('#editUserUsername').val(username);
+        $('#editUserModal').modal('show');
+    };
+
+    // Open change password modal
+    window.openChangePasswordModal = function (id) {
+        $('#changePasswordUserId').val(id);
+        $('#changePasswordModal').modal('show');
+    };
+
+    // Update password
+    $('#updatePassword').click(function () {
+        var id = $('#changePasswordUserId').val();
+        var password = $('#newPassword').val();
+        if (password && password.length >= 6) {
+            $.ajax({
+                url: API_USERS_UPDATE_PASSWORD + '/' + id + '/password',
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    password: password
+                }),
+                success: function (response) {
+                    Swal.fire({
+                        icon: response.status === 1 ? 'success' : 'error',
+                        title: response.status === 1 ? 'Éxito' : 'Error',
+                        text: response.message
+                    });
+                    if (response.status === 1) {
+                        $('#changePasswordModal').modal('hide');
+                        $('#changePasswordForm')[0].reset();
+                        loadUsuarios(); // Reload the table
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de conexión.'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Contraseña inválida',
+                text: 'La contraseña debe tener al menos 6 caracteres.'
+            });
+        }
+    });
+
+    // Update user
+    $('#updateUser').click(function () {
+        var id = $('#editUserId').val();
+        var fullname = $('#editUserFullname').val();
+        var username = $('#editUserUsername').val();
+        var rol = $('#editUserRol').val();
+        if (fullname && username && rol) {
+            $.ajax({
+                url: API_USERS_UPDATE + '/' + id,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    fullname: fullname,
+                    username: username,
+                    rol: parseInt(rol)
+                }),
+                success: function (response) {
+                    Swal.fire({
+                        icon: response.status === 1 ? 'success' : 'error',
+                        title: response.status === 1 ? 'Éxito' : 'Error',
+                        text: response.message
+                    });
+                    if (response.status === 1) {
+                        $('#editUserModal').modal('hide');
+                        $('#editUserForm')[0].reset();
+                        loadUsuarios(); // Reload the table
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de conexión.'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos requeridos',
+                text: 'Por favor, complete todos los campos.'
+            });
+        }
+    });
+
+    // Delete user
+    window.deleteUser = function (id) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: API_USERS_DELETE + '/' + id,
+                    method: 'DELETE',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: response.status === 1 ? 'success' : 'error',
+                            title: response.status === 1 ? 'Eliminado' : 'Error',
+                            text: response.message
+                        });
+                        if (response.status === 1) {
+                            loadUsuarios(); // Reload the table
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error de conexión.'
+                        });
+                    }
+                });
+            }
     });
 
     // Create product modal show event
