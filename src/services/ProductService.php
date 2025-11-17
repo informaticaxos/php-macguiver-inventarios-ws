@@ -270,6 +270,16 @@ class ProductService
     }
 
     /**
+     * Obtiene el valor máximo del campo aux
+     *
+     * @return int|null
+     */
+    public function getMaxAux()
+    {
+        return $this->repository->findMaxAux();
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

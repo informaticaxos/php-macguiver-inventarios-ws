@@ -134,6 +134,15 @@ class ProductController
     }
 
     /**
+     * Obtiene el valor máximo del campo aux
+     */
+    public function getMaxAux()
+    {
+        $maxAux = $this->service->getMaxAux();
+        $this->sendResponse(200, 1, 'Max aux retrieved successfully', ['max_aux' => $maxAux]);
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

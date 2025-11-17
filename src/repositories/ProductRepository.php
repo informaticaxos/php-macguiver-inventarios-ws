@@ -150,6 +150,18 @@ class ProductRepository
     }
 
     /**
+     * Obtiene el valor máximo del campo aux
+     *
+     * @return int|null
+     */
+    public function findMaxAux()
+    {
+        $stmt = $this->pdo->query("SELECT MAX(aux) as max_aux FROM products");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['max_aux'] ?? null;
+    }
+
+    /**
      * Elimina un product por ID
      *
      * @param int $id

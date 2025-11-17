@@ -8,6 +8,7 @@
 // Definición de rutas REST para Products
 $routes = [
     'GET /products' => ['ProductController', 'getAll'],
+    'GET /products/max-aux' => ['ProductController', 'getMaxAux'],
     'GET /products/{id}' => ['ProductController', 'getById'],
     'POST /products' => ['ProductController', 'create'],
     'POST /products/bulk-import' => ['ProductController', 'bulkImport'],
