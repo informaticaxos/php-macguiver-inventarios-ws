@@ -613,24 +613,13 @@ $(document).ready(function () {
         var cards = '<div class="row g-3">';
         filteredData.forEach(function (producto) {
             cards += '<div class="col-12">' +
-                '<div class="card h-100 shadow-sm">' +
+                '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
                 '<h5 class="card-title mb-0">' + (producto.brand || 'N/A') + ' - ' + (producto.code || 'N/A') + '</h5>' +
                 '</div>' +
                 '<div class="card-body">' +
-                '<p class="card-text"><strong>Descripción:</strong> ' + (producto.description || 'N/A') + '</p>' +
-                '<div class="row">' +
-                '<div class="col-md-6">' +
-                '<strong>Stock:</strong> ' + (producto.stock || 0) + '<br>' +
-                '<strong>Costo:</strong> $' + (producto.cost || 0) + '<br>' +
-                '<strong>PVP:</strong> $' + (producto.pvp || 0) +
-                '</div>' +
-                '<div class="col-md-6">' +
-                '<strong>Mínimo:</strong> ' + (producto.min || 0) + '<br>' +
-                '<strong>Aux:</strong> ' + (producto.aux || 0) + '<br>' +
-                '<small class="text-muted">ID: ' + producto.id_product + '</small>' +
-                '</div>' +
-                '</div>' +
+                '<p class="card-text mb-1"><strong>Descripción:</strong> ' + (producto.description || 'N/A') + '</p>' +
+                '<p class="card-text mb-0"><strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small></p>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
