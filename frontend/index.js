@@ -999,6 +999,8 @@ $(document).ready(function () {
 
     // Save new product
     $('#saveProduct').click(function () {
+        console.log('Paso 1: Iniciando proceso de guardado de producto');
+
         var brand = $('#productBrand').val().trim();
         var description = $('#productDescription').val().trim();
         var stock = $('#productStock').val().trim();
@@ -1006,33 +1008,63 @@ $(document).ready(function () {
         var pvp = $('#productPvp').val().trim();
         var min = $('#productMin').val().trim();
         var code = $('#productCode').val().trim();
+
+        console.log('Paso 2: Valores obtenidos del formulario', {
+            brand: brand,
+            description: description,
+            stock: stock,
+            cost: cost,
+            pvp: pvp,
+            min: min,
+            code: code
+        });
+
+        console.log('Paso 3: Validando que todos los campos estén completos...');
         if (brand !== '' && description !== '' && stock !== '' && cost !== '' && pvp !== '' && min !== '' && code !== '') {
+            console.log('Paso 4: Campos válidos, preparando datos para envío');
+
+            var dataToSend = {
+                brand: brand,
+                description: description,
+                stock: parseInt(stock),
+                cost: parseFloat(cost),
+                pvp: parseFloat(pvp),
+                min: parseInt(min),
+                code: code
+            };
+
+            console.log('Paso 5: Datos a enviar al servidor', dataToSend);
+
             $.ajax({
                 url: 'https://nestorcornejo.com/macguiver-inventarios/products',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({
-                    brand: brand,
-                    description: description,
-                    stock: parseInt(stock),
-                    cost: parseFloat(cost),
-                    pvp: parseFloat(pvp),
-                    min: parseInt(min),
-                    code: code
-                }),
+                data: JSON.stringify(dataToSend),
                 success: function (response) {
+                    console.log('Paso 6: Respuesta recibida del servidor', response);
+
                     Swal.fire({
                         icon: response.status === 1 ? 'success' : 'error',
                         title: response.status === 1 ? 'Éxito' : 'Error',
                         text: response.message
                     });
+
                     if (response.status === 1) {
+                        console.log('Paso 7: Producto guardado exitosamente, cerrando modal y recargando lista');
                         $('#createProductModal').modal('hide');
                         $('#createProductForm')[0].reset();
                         loadProductos(); // Reload the products table
+                    } else {
+                        console.log('Paso 7: Error en la respuesta del servidor', response.message);
                     }
                 },
-                error: function () {
+                error: function (xhr, status, error) {
+                    console.log('Paso 6: Error en la solicitud AJAX', {
+                        status: status,
+                        error: error,
+                        responseText: xhr.responseText
+                    });
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -1041,6 +1073,7 @@ $(document).ready(function () {
                 }
             });
         } else {
+            console.log('Paso 4: Campos inválidos - algunos campos están vacíos');
             Swal.fire({
                 icon: 'warning',
                 title: 'Campos requeridos',
