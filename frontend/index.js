@@ -172,7 +172,7 @@ $(document).ready(function () {
                     var statsHtml = '<div class="row justify-content-center"><div class="col-12"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Información del Módulo de Productos</h5></div><div class="card-body"><div class="row"><div class="col-6"><h4 class="text-primary">' + (stats.total_products || 0) + '</h4><p class="mb-0">Total de Productos Registrados</p></div><div class="col-6"><h4 class="text-success">$' + (stats.total_value || 0) + '</h4><p class="mb-0">Valor Total del Inventario</p></div></div></div></div></div></div>';
                     var searchHtml = '<div class="row justify-content-center mt-4"><div class="col-md-8"><div class="card shadow-sm"><div class="card-body"><h6 class="card-title">Buscar Productos</h6><div class="input-group"><input type="text" id="productSearchInput" class="form-control" placeholder="Buscar por código, descripción o aux (ej: frenos posterior)"><button class="btn btn-primary" type="button" id="searchProductsBtn"><i class="fas fa-search"></i> Buscar</button><button class="btn btn-secondary" type="button" id="scanQRSearchBtn"><i class="fas fa-qrcode"></i> Escanear QR</button></div></div></div></div></div>';
                     var resultsHtml = '<div id="search-results" class="mt-4" style="display: none;"><div class="row g-3" id="products-results"></div></div>';
-                    $('#productos-content').html(statsHtml + resultsHtml);
+                    $('#productos-content').html(statsHtml + searchHtml + resultsHtml);
 
                     // Load productos data for search
                     $.ajax({
