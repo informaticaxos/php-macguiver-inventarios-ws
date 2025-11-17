@@ -23,6 +23,7 @@ $(document).ready(function () {
 
     var productosData = []; // Store the productos data globally
     var usersData = []; // Store the users data globally
+    var currentSearchInput = '#searchCode'; // Default for add stock modal
 
     // Handle sidebar navigation
     $('.sidebar .nav-link, .offcanvas .nav-link').click(function (e) {
@@ -95,11 +96,66 @@ $(document).ready(function () {
         loadProductosStats();
     });
 
+    // Search products functionality
+    $(document).on('click', '#searchProductsBtn', function() {
+        performProductSearch();
+    });
+
+    $(document).on('keyup', '#productSearchInput', function(e) {
+        if (e.key === 'Enter') {
+            performProductSearch();
+        }
+    });
+
+    function performProductSearch() {
+        var searchTerm = $('#productSearchInput').val().trim().toLowerCase();
+        if (!searchTerm) {
+            $('#search-results').hide();
+            return;
+        }
+
+        var filteredProducts = productosData.filter(function(product) {
+            return (product.code && product.code.toLowerCase().includes(searchTerm)) ||
+                   (product.description && product.description.toLowerCase().includes(searchTerm)) ||
+                   (product.aux && product.aux.toString().toLowerCase().includes(searchTerm));
+        });
+
+        renderSearchResults(filteredProducts);
+        $('#search-results').show();
+    }
+
+    function renderSearchResults(products) {
+        var resultsHtml = '';
+        if (products.length === 0) {
+            resultsHtml = '<div class="col-12"><div class="alert alert-info">No se encontraron productos que coincidan con la búsqueda.</div></div>';
+        } else {
+            products.forEach(function(product) {
+                var productInfo = '<strong>Stock:</strong> ' + (product.stock || 0) + ' | <strong>PVP:</strong> $' + (product.pvp || 0) + ' | <strong>Aux:</strong> ' + (product.aux || 0) + ' | <small class="text-muted">ID: ' + product.id_product + '</small>';
+                if (userRole == 1) { // Admin role
+                    productInfo = '<strong>Stock:</strong> ' + (product.stock || 0) + ' | <strong>Costo:</strong> $' + (product.cost || 0) + ' | <strong>PVP:</strong> $' + (product.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (product.min || 0) + ' | <strong>Aux:</strong> ' + (product.aux || 0) + ' | <small class="text-muted">ID: ' + product.id_product + '</small>';
+                }
+                var editButton = userRole == 1 ? '<button class="btn btn-sm btn-warning mt-2" onclick="openEditProductModal(' + product.id_product + ', \'' + (product.brand || '') + '\', \'' + (product.description || '') + '\', ' + (product.stock || 0) + ', ' + (product.cost || 0) + ', ' + (product.pvp || 0) + ', ' + (product.min || 0) + ', \'' + (product.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
+                resultsHtml += '<div class="col-md-6 col-lg-4">' +
+                    '<div class="card shadow-sm">' +
+                    '<div class="card-header bg-primary text-white">' +
+                    '<h6 class="card-title mb-0">' + (product.code || 'N/A') + ' | ' + (product.description || 'N/A') + '</h6>' +
+                    '</div>' +
+                    '<div class="card-body">' +
+                    '<p class="card-text mb-0">' + productInfo + '</p>' +
+                    editButton +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            });
+        }
+        $('#products-results').html(resultsHtml);
+    }
+
 
 
     // Load productos stats by default
     function loadProductos() {
-        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button><button id="viewProductosListBtn" class="btn btn-primary btn-sm"><i class="fas fa-list"></i> Ver Lista de Productos</button></div></div><div id="productos-content" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div><div id="productos-content" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         loadProductosStats();
     }
 
@@ -112,7 +168,23 @@ $(document).ready(function () {
                 if (response.status === 1) {
                     var stats = response.data;
                     var statsHtml = '<div class="row justify-content-center"><div class="col-md-6"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Información del Módulo de Productos</h5></div><div class="card-body"><div class="row"><div class="col-6"><h4 class="text-primary">' + (stats.total_products || 0) + '</h4><p class="mb-0">Total de Productos Registrados</p></div><div class="col-6"><h4 class="text-success">$' + (stats.total_value || 0) + '</h4><p class="mb-0">Valor Total del Inventario</p></div></div></div></div></div></div>';
-                    $('#productos-content').html(statsHtml);
+                    var searchHtml = '<div class="row justify-content-center mt-4"><div class="col-md-8"><div class="card shadow-sm"><div class="card-body"><h6 class="card-title">Buscar Productos</h6><div class="input-group"><input type="text" id="productSearchInput" class="form-control" placeholder="Buscar por código, descripción o aux (ej: frenos posterior)"><button class="btn btn-primary" type="button" id="searchProductsBtn"><i class="fas fa-search"></i> Buscar</button><button class="btn btn-secondary" type="button" id="scanQRSearchBtn"><i class="fas fa-qrcode"></i> Escanear QR</button></div></div></div></div></div>';
+                    var resultsHtml = '<div id="search-results" class="mt-4" style="display: none;"><div class="row g-3" id="products-results"></div></div>';
+                    $('#productos-content').html(statsHtml + searchHtml + resultsHtml);
+
+                    // Load productos data for search
+                    $.ajax({
+                        url: API_PRODUCTS_LIST,
+                        method: 'GET',
+                        success: function (response) {
+                            if (response.status === 1) {
+                                productosData = response.data;
+                            }
+                        },
+                        error: function () {
+                            // Handle error silently
+                        }
+                    });
                 } else {
                     $('#productos-content').html('<p>Error al cargar estadísticas: ' + response.message + '</p>');
                 }
