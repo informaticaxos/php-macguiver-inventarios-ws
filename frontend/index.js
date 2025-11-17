@@ -84,7 +84,7 @@ $(document).ready(function () {
         });
         var cards = '<div class="row g-3">';
         filteredData.forEach(function (producto) {
-            cards += '<div class="col-12">' +
+            cards += '<div class="col-4">' +
                 '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
                 '<h5 class="card-title mb-0">' + (producto.brand || 'N/A') + ' - ' + (producto.code || 'N/A') + '</h5>' +
