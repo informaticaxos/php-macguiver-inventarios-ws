@@ -86,7 +86,7 @@ $(document).ready(function () {
 
     // Load productos
     function loadProductos() {
-        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#content-area').html('<h2>Productos</h2><div class="d-flex flex-column flex-md-row justify-content-between mb-3"><div class="d-flex mb-2 mb-md-0"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"></div><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         $.ajax({
             url: API_PRODUCTS_LIST,
             method: 'GET',
@@ -663,5 +663,99 @@ $(document).ready(function () {
                 text: 'Por favor, complete todos los campos.'
             });
         }
+    });
+
+    // Add stock functionality
+    var currentProductForStock = null;
+
+    // Search product for adding stock
+    $('#searchProductBtn').click(function () {
+        var searchCode = $('#searchCode').val().trim();
+        if (!searchCode) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, ingrese un código o aux.'
+            });
+            return;
+        }
+
+        // Find product by code or aux
+        var foundProduct = productosData.find(function (product) {
+            return product.code === searchCode || product.aux == searchCode;
+        });
+
+        if (foundProduct) {
+            currentProductForStock = foundProduct;
+            $('#foundCode').text(foundProduct.code || 'N/A');
+            $('#foundDescription').text(foundProduct.description || 'N/A');
+            $('#foundStock').text(foundProduct.stock || 0);
+            $('#productInfo').show();
+            $('#updateStockBtn').show();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Producto no encontrado',
+                text: 'No se encontró un producto con ese código o aux.'
+            });
+            $('#productInfo').hide();
+            $('#updateStockBtn').hide();
+        }
+    });
+
+    // Update stock
+    $('#updateStockBtn').click(function () {
+        var newStock = parseInt($('#newStock').val());
+        if (isNaN(newStock) || newStock < 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stock inválido',
+                text: 'Por favor, ingrese un stock válido.'
+            });
+            return;
+        }
+
+        var updatedStock = (currentProductForStock.stock || 0) + newStock;
+
+        $.ajax({
+            url: API_PRODUCTS_UPDATE + '/' + currentProductForStock.id_product,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                stock: updatedStock
+            }),
+            success: function (response) {
+                Swal.fire({
+                    icon: response.status === 1 ? 'success' : 'error',
+                    title: response.status === 1 ? 'Éxito' : 'Error',
+                    text: response.message
+                });
+                if (response.status === 1) {
+                    $('#addStockModal').modal('hide');
+                    $('#searchCode').val('');
+                    $('#newStock').val('');
+                    $('#productInfo').hide();
+                    $('#updateStockBtn').hide();
+                    currentProductForStock = null;
+                    loadProductos(); // Reload the products table
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error de conexión.'
+                });
+            }
+        });
+    });
+
+    // QR Scan button (placeholder for future implementation)
+    $('#scanQRBtn').click(function () {
+        Swal.fire({
+            icon: 'info',
+            title: 'Funcionalidad próximamente',
+            text: 'La funcionalidad de escaneo QR estará disponible próximamente.'
+        });
     });
 });
