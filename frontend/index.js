@@ -11,6 +11,7 @@ $(document).ready(function () {
     // Products API Endpoints
     const API_PRODUCTS_LIST = API_BASE_INVENTARIOS + '/products'; // GET: Obtener lista de productos
     const API_PRODUCTS_CREATE = API_BASE_INVENTARIOS + '/products'; // POST: Crear nuevo producto
+    const API_PRODUCTS_UPDATE = API_BASE_INVENTARIOS + '/products'; // PUT: Actualizar producto
     const API_PRODUCTS_BULK_IMPORT = API_BASE_INVENTARIOS + '/products/bulk-import'; // POST: Importar productos en masa desde Excel
 
     // Users API Endpoints
@@ -117,6 +118,7 @@ $(document).ready(function () {
             if (userRole == 1) { // Admin role
                 productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
             }
+            var editButton = userRole == 1 ? '<button class="btn btn-sm btn-warning mt-2" onclick="openEditProductModal(' + producto.id_product + ', \'' + (producto.brand || '') + '\', \'' + (producto.description || '') + '\', ' + (producto.stock || 0) + ', ' + (producto.cost || 0) + ', ' + (producto.pvp || 0) + ', ' + (producto.min || 0) + ', \'' + (producto.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
             cards += '<div class="col-4">' +
                 '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
@@ -124,6 +126,7 @@ $(document).ready(function () {
                 '</div>' +
                 '<div class="card-body">' +
                 '<p class="card-text mb-0">' + productInfo + '</p>' +
+                editButton +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -587,6 +590,73 @@ $(document).ready(function () {
             });
         } else {
             console.log('Paso 4: Campos inválidos - algunos campos están vacíos');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos requeridos',
+                text: 'Por favor, complete todos los campos.'
+            });
+        }
+    });
+
+    // Open edit product modal
+    window.openEditProductModal = function (id, brand, description, stock, cost, pvp, min, code) {
+        $('#editProductId').val(id);
+        $('#editProductBrand').val(brand);
+        $('#editProductDescription').val(description);
+        $('#editProductStock').val(stock);
+        $('#editProductCost').val(cost);
+        $('#editProductPvp').val(pvp);
+        $('#editProductMin').val(min);
+        $('#editProductCode').val(code);
+        $('#editProductModal').modal('show');
+    };
+
+    // Update product
+    $('#updateProduct').click(function () {
+        var id = $('#editProductId').val();
+        var brand = $('#editProductBrand').val().trim();
+        var description = $('#editProductDescription').val().trim();
+        var stock = $('#editProductStock').val().trim();
+        var cost = $('#editProductCost').val().trim();
+        var pvp = $('#editProductPvp').val().trim();
+        var min = $('#editProductMin').val().trim();
+        var code = $('#editProductCode').val().trim();
+
+        if (brand !== '' && description !== '' && stock !== '' && cost !== '' && pvp !== '' && min !== '' && code !== '') {
+            $.ajax({
+                url: API_PRODUCTS_UPDATE + '/' + id,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    brand: brand,
+                    description: description,
+                    stock: parseInt(stock),
+                    cost: parseFloat(cost),
+                    pvp: parseFloat(pvp),
+                    min: parseInt(min),
+                    code: code
+                }),
+                success: function (response) {
+                    Swal.fire({
+                        icon: response.status === 1 ? 'success' : 'error',
+                        title: response.status === 1 ? 'Éxito' : 'Error',
+                        text: response.message
+                    });
+                    if (response.status === 1) {
+                        $('#editProductModal').modal('hide');
+                        $('#editProductForm')[0].reset();
+                        loadProductos(); // Reload the products table
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de conexión.'
+                    });
+                }
+            });
+        } else {
             Swal.fire({
                 icon: 'warning',
                 title: 'Campos requeridos',
