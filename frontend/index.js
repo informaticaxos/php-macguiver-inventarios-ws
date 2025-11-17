@@ -994,22 +994,7 @@ $(document).ready(function () {
 
     // Create product modal show event
     $('#createProductModal').on('show.bs.modal', function () {
-        // Fetch max_aux and set aux field
-        $.ajax({
-            url: 'https://nestorcornejo.com/macguiver-inventarios/products/max-aux',
-            method: 'GET',
-            success: function (response) {
-                if (response.status === 1) {
-                    var maxAux = response.data.max_aux || 0;
-                    $('#productAux').val(maxAux + 1);
-                } else {
-                    $('#productAux').val(1); // Default to 1 if error
-                }
-            },
-            error: function () {
-                $('#productAux').val(1); // Default to 1 if error
-            }
-        });
+        // No need to fetch max_aux as it's generated server-side
     });
 
     // Save new product

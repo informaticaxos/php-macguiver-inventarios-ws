@@ -53,20 +53,14 @@ class ProductService
             return null; // Error de validación
         }
 
-        // Validar aux: debe ser string no vacío y único
-        if (empty($data['aux']) || !is_string($data['aux'])) {
-            return null; // Error de validación
-        }
-
         // Verificar si el code ya existe
         if ($this->repository->findByCode($data['code'])) {
             return null; // Code ya existe
         }
 
-        // Verificar si aux ya existe
-        if ($this->repository->findByAux($data['aux'])) {
-            return null; // Aux ya existe
-        }
+        // Generar aux automáticamente: max_aux + 1
+        $maxAux = $this->getMaxAux() ?? 0;
+        $data['aux'] = (string)($maxAux + 1);
 
         $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux']);
         $this->repository->save($product);
@@ -207,6 +201,9 @@ class ProductService
             return ['success' => false, 'message' => 'No products to import'];
         }
 
+        // Obtener el max aux actual para generar nuevos
+        $currentMaxAux = $this->getMaxAux() ?? 0;
+
         // Filtrar productos válidos y verificar duplicados
         $validProducts = [];
         $errors = [];
@@ -219,25 +216,17 @@ class ProductService
                     continue;
                 }
 
-                // Validar aux: debe ser string no vacío y único
-                if (!isset($productData['aux']) || !is_string($productData['aux']) || empty($productData['aux'])) {
-                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be non-empty string';
-                    continue;
-                }
-
                 // Verificar si code ya existe
                 if ($this->repository->findByCode($productData['code'])) {
                     // Skip existing products
                     continue;
                 }
 
-                // Verificar si aux ya existe
-                if ($this->repository->findByAux($productData['aux'])) {
-                    // Skip existing products
-                    continue;
-                }
+                // Generar aux automáticamente: incrementar max_aux
+                $currentMaxAux++;
+                $aux = (string)$currentMaxAux;
 
-                // Agregar producto válido
+                // Agregar producto válido con aux generado
                 $validProducts[] = [
                     'brand' => $productData['brand'] ?? '',
                     'description' => $productData['description'] ?? '',
@@ -246,7 +235,7 @@ class ProductService
                     'pvp' => $productData['pvp'] ?? 0.0,
                     'min' => $productData['min'] ?? 0,
                     'code' => $productData['code'],
-                    'aux' => $productData['aux']
+                    'aux' => $aux
                 ];
 
             } catch (Exception $e) {
