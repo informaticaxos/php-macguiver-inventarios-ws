@@ -612,25 +612,25 @@ $(document).ready(function () {
         });
         var cards = '<div class="row g-3">';
         filteredData.forEach(function (producto) {
-            cards += '<div class="col-lg-3 col-md-6 col-sm-12">' +
+            cards += '<div class="col-12">' +
                 '<div class="card h-100 shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
-                '<h6 class="card-title mb-0">' + (producto.code || 'N/A') + ' - ' + (producto.brand || 'N/A') + '</h6>' +
+                '<h5 class="card-title mb-0">' + (producto.brand || 'N/A') + ' - ' + (producto.code || 'N/A') + '</h5>' +
                 '</div>' +
                 '<div class="card-body">' +
                 '<p class="card-text"><strong>Descripción:</strong> ' + (producto.description || 'N/A') + '</p>' +
                 '<div class="row">' +
-                '<div class="col-6"><strong>Stock:</strong> ' + (producto.stock || 0) + '</div>' +
-                '<div class="col-6"><strong>Costo:</strong> $' + (producto.cost || 0) + '</div>' +
+                '<div class="col-md-6">' +
+                '<strong>Stock:</strong> ' + (producto.stock || 0) + '<br>' +
+                '<strong>Costo:</strong> $' + (producto.cost || 0) + '<br>' +
+                '<strong>PVP:</strong> $' + (producto.pvp || 0) +
                 '</div>' +
-                '<div class="row mt-2">' +
-                '<div class="col-6"><strong>PVP:</strong> $' + (producto.pvp || 0) + '</div>' +
-                '<div class="col-6"><strong>Mínimo:</strong> ' + (producto.min || 0) + '</div>' +
-                '</div>' +
-                '<div class="row mt-2">' +
-                '<div class="col-6"><strong>Aux:</strong> ' + (producto.aux || 0) + '</div>' +
-                '</div>' +
+                '<div class="col-md-6">' +
+                '<strong>Mínimo:</strong> ' + (producto.min || 0) + '<br>' +
+                '<strong>Aux:</strong> ' + (producto.aux || 0) + '<br>' +
                 '<small class="text-muted">ID: ' + producto.id_product + '</small>' +
+                '</div>' +
+                '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
