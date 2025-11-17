@@ -286,6 +286,17 @@ class ProductService
     }
 
     /**
+     * Busca productos por code, description o aux
+     *
+     * @param string $query
+     * @return array
+     */
+    public function getProductsBySearch($query)
+    {
+        return $this->repository->search($query);
+    }
+
+    /**
      * Obtiene estadísticas del inventario
      *
      * @return array

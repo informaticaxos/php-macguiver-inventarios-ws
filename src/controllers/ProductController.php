@@ -158,6 +158,21 @@ class ProductController
     }
 
     /**
+     * Busca productos por code, description o aux
+     */
+    public function search()
+    {
+        $query = $_GET['q'] ?? '';
+        if (empty($query)) {
+            $this->sendResponse(400, 0, 'Query parameter "q" is required', null);
+            return;
+        }
+
+        $products = $this->service->getProductsBySearch($query);
+        $this->sendResponse(200, 1, 'Products retrieved successfully', $products);
+    }
+
+    /**
      * Obtiene estadísticas del inventario
      */
     public function getStats()

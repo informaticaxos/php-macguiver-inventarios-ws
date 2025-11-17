@@ -173,6 +173,20 @@ class ProductRepository
     }
 
     /**
+     * Busca productos por code, description o aux usando LIKE
+     *
+     * @param string $query
+     * @return array
+     */
+    public function search($query)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE code LIKE ? OR description LIKE ? OR aux LIKE ?");
+        $searchTerm = '%' . $query . '%';
+        $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Obtiene estadísticas del inventario: cantidad de productos y valor total
      *
      * @return array
