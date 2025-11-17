@@ -47,9 +47,14 @@ class ProductController
      */
     public function create()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (!$data) {
-            $this->sendResponse(400, 0, 'Invalid JSON data', null);
+        $rawInput = file_get_contents('php://input');
+        error_log('Raw input length: ' . strlen($rawInput));
+        error_log('Raw input: ' . $rawInput);
+        $data = json_decode($rawInput, true);
+        error_log('JSON error: ' . json_last_error_msg());
+        error_log('Data: ' . print_r($data, true));
+        if (json_last_error() !== JSON_ERROR_NONE || !$data) {
+            $this->sendResponse(400, 0, 'Invalid JSON data: ' . json_last_error_msg(), null);
             return;
         }
 
