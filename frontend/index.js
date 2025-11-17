@@ -999,15 +999,14 @@ $(document).ready(function () {
 
     // Save new product
     $('#saveProduct').click(function () {
-        var brand = $('#productBrand').val();
-        var description = $('#productDescription').val();
-        var stock = $('#productStock').val();
-        var cost = $('#productCost').val();
-        var pvp = $('#productPvp').val();
-        var min = $('#productMin').val();
-        var code = $('#productCode').val();
-        var aux = $('#productAux').val();
-        if (brand && description && stock && cost && pvp && min && code && aux) {
+        var brand = $('#productBrand').val().trim();
+        var description = $('#productDescription').val().trim();
+        var stock = $('#productStock').val().trim();
+        var cost = $('#productCost').val().trim();
+        var pvp = $('#productPvp').val().trim();
+        var min = $('#productMin').val().trim();
+        var code = $('#productCode').val().trim();
+        if (brand !== '' && description !== '' && stock !== '' && cost !== '' && pvp !== '' && min !== '' && code !== '') {
             $.ajax({
                 url: 'https://nestorcornejo.com/macguiver-inventarios/products',
                 method: 'POST',
@@ -1019,8 +1018,7 @@ $(document).ready(function () {
                     cost: parseFloat(cost),
                     pvp: parseFloat(pvp),
                     min: parseInt(min),
-                    code: code,
-                    aux: aux
+                    code: code
                 }),
                 success: function (response) {
                     Swal.fire({
