@@ -173,16 +173,32 @@ class ProductRepository
     }
 
     /**
-     * Busca productos por code, description o aux usando LIKE
+     * Busca productos por code, description o aux usando LIKE con soporte para múltiples palabras (case-insensitive)
      *
      * @param string $query
      * @return array
      */
     public function search($query)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE code LIKE ? OR description LIKE ? OR aux LIKE ?");
-        $searchTerm = '%' . $query . '%';
-        $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
+        $words = array_filter(explode(' ', trim($query)));
+        if (empty($words)) {
+            return [];
+        }
+
+        $conditions = [];
+        $params = [];
+
+        foreach ($words as $word) {
+            $conditions[] = "(LOWER(code) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?) OR LOWER(aux) LIKE LOWER(?))";
+            $searchTerm = '%' . $word . '%';
+            $params = array_merge($params, [$searchTerm, $searchTerm, $searchTerm]);
+        }
+
+        $whereClause = implode(' AND ', $conditions);
+        $sql = "SELECT * FROM products WHERE $whereClause";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
