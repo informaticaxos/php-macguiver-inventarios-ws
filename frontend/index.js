@@ -248,6 +248,7 @@ $(document).ready(function () {
                     text: 'Error al importar productos.'
                 });
             }
+        });
     });
 
     // Load usuarios
