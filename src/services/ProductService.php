@@ -284,4 +284,14 @@ class ProductService
         $this->repository->delete($id);
         return true;
     }
+
+    /**
+     * Obtiene estadísticas del inventario
+     *
+     * @return array
+     */
+    public function getInventoryStats()
+    {
+        return $this->repository->getInventoryStats();
+    }
 }

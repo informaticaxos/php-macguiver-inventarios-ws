@@ -171,4 +171,15 @@ class ProductRepository
         $stmt = $this->pdo->prepare("DELETE FROM products WHERE id_product = ?");
         $stmt->execute([$id]);
     }
+
+    /**
+     * Obtiene estadísticas del inventario: cantidad de productos y valor total
+     *
+     * @return array
+     */
+    public function getInventoryStats()
+    {
+        $stmt = $this->pdo->query("SELECT COUNT(*) as total_products, SUM(cost * stock) as total_value FROM products");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

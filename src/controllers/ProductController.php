@@ -158,6 +158,15 @@ class ProductController
     }
 
     /**
+     * Obtiene estadísticas del inventario
+     */
+    public function getStats()
+    {
+        $stats = $this->service->getInventoryStats();
+        $this->sendResponse(200, 1, 'Inventory stats retrieved successfully', $stats);
+    }
+
+    /**
      * Envía la respuesta HTTP
      *
      * @param int $httpStatus

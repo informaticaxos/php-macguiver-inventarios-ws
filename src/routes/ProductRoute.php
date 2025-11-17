@@ -9,6 +9,7 @@
 $routes = [
     'GET /products' => ['ProductController', 'getAll'],
     'GET /products/max-aux' => ['ProductController', 'getMaxAux'],
+    'GET /products/stats' => ['ProductController', 'getStats'],
     'GET /products/{id}' => ['ProductController', 'getById'],
     'POST /products' => ['ProductController', 'create'],
     'POST /products/bulk-import' => ['ProductController', 'bulkImport'],
