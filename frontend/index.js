@@ -750,12 +750,63 @@ $(document).ready(function () {
         });
     });
 
-    // QR Scan button (placeholder for future implementation)
+    // QR Scanner functionality
+    let scanner = null;
+
     $('#scanQRBtn').click(function () {
-        Swal.fire({
-            icon: 'info',
-            title: 'Funcionalidad próximamente',
-            text: 'La funcionalidad de escaneo QR estará disponible próximamente.'
-        });
+        $('#qrScannerModal').modal('show');
     });
+
+    $('#qrScannerModal').on('shown.bs.modal', function () {
+        startQRScanner();
+    });
+
+    $('#qrScannerModal').on('hidden.bs.modal', function () {
+        stopQRScanner();
+    });
+
+    function startQRScanner() {
+        if (scanner) {
+            scanner.stop();
+        }
+
+        scanner = new Instascan.Scanner({ video: document.getElementById('qr-video') });
+
+        scanner.addListener('scan', function (content) {
+            // Populate the search input with the scanned QR code
+            $('#searchCode').val(content);
+            // Close the scanner modal
+            $('#qrScannerModal').modal('hide');
+            // Automatically trigger the search
+            $('#searchProductBtn').click();
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]); // Start with the first camera
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No se encontró cámara',
+                    text: 'No se pudo acceder a la cámara del dispositivo.'
+                });
+                $('#qrScannerModal').modal('hide');
+            }
+        }).catch(function (e) {
+            console.error(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de cámara',
+                text: 'Error al acceder a la cámara: ' + e.message
+            });
+            $('#qrScannerModal').modal('hide');
+        });
+    }
+
+    function stopQRScanner() {
+        if (scanner) {
+            scanner.stop();
+            scanner = null;
+        }
+    }
 });
