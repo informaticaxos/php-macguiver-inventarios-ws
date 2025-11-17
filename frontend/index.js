@@ -1,9 +1,9 @@
 $(document).ready(function () {
     // Check if logged in
-    // if (localStorage.getItem('loggedIn') !== 'true') {
-    //     window.location.href = 'login.html';
-    //     return;
-    // }
+    if (localStorage.getItem('loggedIn') !== 'true') {
+        window.location.href = 'login.html';
+        return;
+    }
 
     // API Endpoints Configuration
     const API_BASE_INVENTARIOS = 'https://nestorcornejo.com/macguiver-inventarios';
@@ -42,6 +42,31 @@ $(document).ready(function () {
             loadUsuarios();
         }
     }
+
+    // Logout functionality
+    $('#logoutBtn').click(function() {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¿Quieres cerrar la sesión?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, cerrar sesión',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('loggedIn');
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                window.location.href = 'login.html';
+            }
+        });
+    });
+
+    // Display user name
+    var userName = localStorage.getItem('user') || 'Usuario';
+    $('#userName').text(userName);
 
     // Search functionality
     $(document).on('keyup', '#searchProducto', function() {
