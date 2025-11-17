@@ -468,7 +468,8 @@ $(document).ready(function () {
                     }
                 });
             }
-    });
+        });
+    };
 
     // Create product modal show event
     $('#createProductModal').on('show.bs.modal', function () {
