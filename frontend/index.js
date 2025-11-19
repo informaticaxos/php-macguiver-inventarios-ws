@@ -945,8 +945,10 @@ $(document).ready(function () {
         searchScanner = new Instascan.Scanner({ video: document.getElementById('qr-search-video') });
 
         searchScanner.addListener('scan', function (content) {
+            // Validate and truncate to first 8 characters if longer
+            var searchValue = content.length > 8 ? content.substring(0, 8) : content;
             // Populate the search input with the scanned QR code
-            $('#productSearchInput').val(content);
+            $('#productSearchInput').val(searchValue);
             // Close the scanner modal
             $('#qrScannerSearchModal').modal('hide');
             // Automatically trigger the search
