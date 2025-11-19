@@ -210,7 +210,7 @@ $(document).ready(function () {
 
     // Load productos list
     function loadProductosList() {
-        $('#productos-content').html('<div class="d-flex mb-3"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"><button id="backToStatsBtn" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Volver a Estadísticas</button></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+        $('#productos-content').html('<div class="actions-header"><div class="section-title">Lista de Productos</div><div class="search-actions"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"><button id="backToStatsBtn" class="btn-custom btn-secondary-custom"><i class="fas fa-arrow-left"></i> Volver a Estadísticas</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
         $.ajax({
             url: API_PRODUCTS_LIST,
             method: 'GET',
@@ -242,8 +242,8 @@ $(document).ready(function () {
             if (userRole == 1) { // Admin role
                 productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
             }
-            var editButton = userRole == 1 ? '<button class="btn btn-sm btn-warning mt-2" onclick="openEditProductModal(' + producto.id_product + ', \'' + (producto.brand || '') + '\', \'' + (producto.description || '') + '\', ' + (producto.stock || 0) + ', ' + (producto.cost || 0) + ', ' + (producto.pvp || 0) + ', ' + (producto.min || 0) + ', \'' + (producto.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
-            var qrButton = '<button class="btn btn-sm btn-info mt-2" onclick="generateQRCode(\'' + (producto.code || '') + '\', \'' + (producto.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
+            var editButton = userRole == 1 ? '<button class="btn-custom btn-warning-custom mt-2" onclick="openEditProductModal(' + producto.id_product + ', \'' + (producto.brand || '') + '\', \'' + (producto.description || '') + '\', ' + (producto.stock || 0) + ', ' + (producto.cost || 0) + ', ' + (producto.pvp || 0) + ', ' + (producto.min || 0) + ', \'' + (producto.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
+            var qrButton = '<button class="btn-custom btn-info-custom mt-2" onclick="generateQRCode(\'' + (producto.code || '') + '\', \'' + (producto.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
             cards += '<div class="col-4">' +
                 '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
