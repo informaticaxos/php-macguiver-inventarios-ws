@@ -182,8 +182,8 @@ $(document).ready(function () {
                 if (response.status === 1) {
                     var stats = response.data;
                     var statsHtml = '<div class="row justify-content-center"><div class="col-12"><div class="stats-container"><div class="card"><div class="card-header"><h5 class="card-title mb-0">Información del Módulo de Productos</h5></div><div class="card-body"><div class="row"><div class="col-6"><h4 class="text-primary">' + (stats.total_products || 0) + '</h4><p class="mb-0">Total de Productos Registrados</p></div><div class="col-6"><h4 class="text-success">$' + (stats.total_value || 0) + '</h4><p class="mb-0">Valor Total del Inventario</p></div></div></div></div></div></div></div>';
-                    var buttonsHtml = '<div class="d-flex flex-column flex-md-row justify-content-center mt-4 mb-3"><div class="d-flex gap-2"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div>';
-                    $('#productos-content').html(statsHtml + buttonsHtml);
+                    var actionsHtml = '<div class="actions-header"><div class="section-title">Productos</div><div class="btn-group-custom"><button id="refreshProductosBtn" class="btn-custom btn-secondary-custom"><i class="fas fa-sync"></i> Actualizar</button><button type="button" class="btn-custom btn-success-custom" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn-custom btn-success-custom" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn-custom btn-info-custom" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div>';
+                    $('#productos-content').html(statsHtml + actionsHtml);
 
                     // Load productos data for search
                     $.ajax({
@@ -243,6 +243,7 @@ $(document).ready(function () {
                 productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
             }
             var editButton = userRole == 1 ? '<button class="btn btn-sm btn-warning mt-2" onclick="openEditProductModal(' + producto.id_product + ', \'' + (producto.brand || '') + '\', \'' + (producto.description || '') + '\', ' + (producto.stock || 0) + ', ' + (producto.cost || 0) + ', ' + (producto.pvp || 0) + ', ' + (producto.min || 0) + ', \'' + (producto.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
+            var qrButton = '<button class="btn btn-sm btn-info mt-2" onclick="generateQRCode(\'' + (producto.code || '') + '\', \'' + (producto.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
             cards += '<div class="col-4">' +
                 '<div class="card shadow-sm">' +
                 '<div class="card-header bg-primary text-white">' +
@@ -250,7 +251,10 @@ $(document).ready(function () {
                 '</div>' +
                 '<div class="card-body">' +
                 '<p class="card-text mb-0">' + productInfo + '</p>' +
+                '<div class="d-flex gap-1">' +
                 editButton +
+                qrButton +
+                '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
