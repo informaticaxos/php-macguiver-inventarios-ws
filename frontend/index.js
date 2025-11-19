@@ -934,6 +934,23 @@ $(document).ready(function () {
         }
     }
 
+    // Function to play a beep sound
+    function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Frequency in Hz (800 Hz for beep)
+        oscillator.type = 'square'; // Square wave for beep sound
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); // Volume
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1); // Duration: 0.1 seconds
+    }
+
     // QR Scanner for search functionality
     let searchScanner = null;
 
@@ -945,6 +962,8 @@ $(document).ready(function () {
         searchScanner = new Instascan.Scanner({ video: document.getElementById('qr-search-video') });
 
         searchScanner.addListener('scan', function (content) {
+            // Play beep sound on scan
+            playBeep();
             // Validate and truncate to first 8 characters if longer
             var searchValue = content.length > 8 ? content.substring(0, 8) : content;
             // Populate the search input with the scanned QR code
