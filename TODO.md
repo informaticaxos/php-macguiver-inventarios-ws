@@ -5,6 +5,7 @@
 - [x] Modificar la función loadProductosStats() en index.js para envolver el recuadro de estadísticas en un div con borde sombreado y estilos tecnológicos
 - [x] Verificar que el diseño se vea iluminado y elegante en la interfaz
 - [x] Agregar sonido de beep al escanear códigos QR en la barra de búsqueda de productos
+- [x] Configurar el escáner QR para usar la cámara trasera por defecto
 - [ ] Crear una nueva sección elegante para el título "Productos" y los botones de acción (Actualizar, Nuevo Producto, Importar Excel, Agregar Stock) con diseño UX avanzado
 
 ## Información Recopilada

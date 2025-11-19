@@ -976,7 +976,15 @@ $(document).ready(function () {
 
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
-                searchScanner.start(cameras[0]); // Start with the first camera
+                // Prefer back camera if available
+                let selectedCamera = cameras[0];
+                for (let camera of cameras) {
+                    if (camera.name && (camera.name.toLowerCase().includes('back') || camera.name.toLowerCase().includes('rear'))) {
+                        selectedCamera = camera;
+                        break;
+                    }
+                }
+                searchScanner.start(selectedCamera);
             } else {
                 Swal.fire({
                     icon: 'error',
