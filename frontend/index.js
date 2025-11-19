@@ -1014,4 +1014,39 @@ $(document).ready(function () {
             searchScanner = null;
         }
     }
+
+    // Generate QR Code function
+    window.generateQRCode = function (code, description) {
+        var qrContainer = document.getElementById('qr-code-container');
+        var qrInfo = document.getElementById('qr-code-info');
+
+        // Clear previous QR code
+        qrContainer.innerHTML = '';
+
+        // Generate QR code
+        QRCode.toCanvas(code, { width: 256, height: 256 }, function (error, canvas) {
+            if (error) {
+                console.error(error);
+                qrInfo.textContent = 'Error al generar el código QR.';
+                return;
+            }
+
+            // Append canvas to container
+            qrContainer.appendChild(canvas);
+
+            // Set info text
+            qrInfo.textContent = 'Código: ' + code + ' - ' + description;
+
+            // Show modal
+            $('#qrCodeModal').modal('show');
+
+            // Set up download functionality
+            $('#downloadQR').off('click').on('click', function () {
+                var link = document.createElement('a');
+                link.download = 'qr_' + code + '.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        });
+    };
 });
