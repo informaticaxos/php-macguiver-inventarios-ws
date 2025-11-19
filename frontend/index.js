@@ -107,6 +107,19 @@ $(document).ready(function () {
         }
     });
 
+    // QR Scanner for search bar
+    $(document).on('click', '#scanQRSearchBtn', function() {
+        $('#qrScannerSearchModal').modal('show');
+    });
+
+    $('#qrScannerSearchModal').on('shown.bs.modal', function () {
+        startQRScannerForSearch();
+    });
+
+    $('#qrScannerSearchModal').on('hidden.bs.modal', function () {
+        stopQRScannerForSearch();
+    });
+
     function performProductSearch() {
         var searchTerm = $('#productSearchInput').val().trim().toLowerCase();
         if (!searchTerm) {
@@ -918,6 +931,54 @@ $(document).ready(function () {
         if (scanner) {
             scanner.stop();
             scanner = null;
+        }
+    }
+
+    // QR Scanner for search functionality
+    let searchScanner = null;
+
+    function startQRScannerForSearch() {
+        if (searchScanner) {
+            searchScanner.stop();
+        }
+
+        searchScanner = new Instascan.Scanner({ video: document.getElementById('qr-search-video') });
+
+        searchScanner.addListener('scan', function (content) {
+            // Populate the search input with the scanned QR code
+            $('#productSearchInput').val(content);
+            // Close the scanner modal
+            $('#qrScannerSearchModal').modal('hide');
+            // Automatically trigger the search
+            performProductSearch();
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                searchScanner.start(cameras[0]); // Start with the first camera
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No se encontró cámara',
+                    text: 'No se pudo acceder a la cámara del dispositivo.'
+                });
+                $('#qrScannerSearchModal').modal('hide');
+            }
+        }).catch(function (e) {
+            console.error(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de cámara',
+                text: 'Error al acceder a la cámara: ' + e.message
+            });
+            $('#qrScannerSearchModal').modal('hide');
+        });
+    }
+
+    function stopQRScannerForSearch() {
+        if (searchScanner) {
+            searchScanner.stop();
+            searchScanner = null;
         }
     }
 });

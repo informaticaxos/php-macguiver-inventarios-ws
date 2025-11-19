@@ -784,6 +784,27 @@
         </div>
     </div>
 
+    <!-- Modal for QR Scanner Search -->
+    <div class="modal fade" id="qrScannerSearchModal" tabindex="-1" aria-labelledby="qrScannerSearchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrScannerSearchModalLabel">Escanear Código QR para Búsqueda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <video id="qr-search-video" width="100%" height="400" style="border: 1px solid #ccc;"></video>
+                        <p class="mt-2">Apunte la cámara al código QR del producto para buscarlo.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
