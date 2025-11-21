@@ -42,6 +42,8 @@ $(document).ready(function () {
             loadProductos();
         } else if (section === 'usuarios') {
             loadUsuarios();
+        } else if (section === 'qr-generator') {
+            loadQRGenerator();
         }
     }
 
@@ -84,17 +86,6 @@ $(document).ready(function () {
     });
 
     // Button event handlers
-    $(document).on('click', '#viewProductosListBtn', function() {
-        loadProductosList();
-    });
-
-    $(document).on('click', '#backToStatsBtn', function() {
-        loadProductosStats();
-    });
-
-    $(document).on('click', '#refreshProductosBtn', function() {
-        loadProductosList();
-    });
 
     // Search products functionality
     $(document).on('click', '#searchProductsBtn', function() {
@@ -191,7 +182,7 @@ $(document).ready(function () {
                 if (response.status === 1) {
                     var stats = response.data;
                     var statsHtml = '<div class="row justify-content-center"><div class="col-12"><div class="stats-container"><div class="card"><div class="card-header"><h5 class="card-title mb-0">Información del Módulo de Productos</h5></div><div class="card-body"><div class="row"><div class="col-6"><h4 class="text-primary">' + (stats.total_products || 0) + '</h4><p class="mb-0">Total de Productos Registrados</p></div><div class="col-6"><h4 class="text-success">$' + (stats.total_value || 0) + '</h4><p class="mb-0">Valor Total del Inventario</p></div></div></div></div></div></div></div>';
-                    var actionsHtml = '<div class="actions-header"><div class="section-title">Productos</div><div class="btn-group-custom"><button id="refreshProductosBtn" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Listar Todos</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div>';
+                    var actionsHtml = '<div class="actions-header"><div class="section-title">Productos</div><div class="btn-group-custom"><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal"><i class="fas fa-plus"></i> Nuevo Producto</button><button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importProductsModal"><i class="fas fa-upload"></i> Importar Excel</button><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal"><i class="fas fa-plus-circle"></i> Agregar Stock</button></div></div>';
                     $('#productos-content').html(statsHtml + actionsHtml);
 
                     // Load productos data for search
@@ -217,25 +208,7 @@ $(document).ready(function () {
         });
     }
 
-    // Load productos list
-    function loadProductosList() {
-        $('#productos-content').html('<div class="actions-header"><div class="section-title">Lista de Productos</div><div class="search-actions"><input type="text" id="searchProducto" class="form-control form-control-sm me-2" placeholder="Buscar por marca"><button id="backToStatsBtn" class="btn-custom btn-secondary-custom"><i class="fas fa-arrow-left"></i> Volver a Estadísticas</button></div></div><div id="productos-table" class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
-        $.ajax({
-            url: API_PRODUCTS_LIST,
-            method: 'GET',
-            success: function (response) {
-                if (response.status === 1) {
-                    productosData = response.data; // Store the data
-                    renderProductosTable();
-                } else {
-                    $('#productos-table').html('<p>Error al cargar productos: ' + response.message + '</p>');
-                }
-            },
-            error: function () {
-                $('#productos-table').html('<p>Error de conexión.</p>');
-            }
-        });
-    }
+
 
 
 
@@ -416,6 +389,94 @@ $(document).ready(function () {
             error: function () {
                 $('#usuarios-table').html('<p>Error de conexión.</p>');
             }
+        });
+    }
+
+    // Load QR Generator
+    function loadQRGenerator() {
+        var qrGeneratorHtml = '<h2>Generador de Códigos QR</h2>' +
+            '<div class="row justify-content-center mt-4">' +
+            '<div class="col-md-8">' +
+            '<div class="card shadow-sm">' +
+            '<div class="card-body">' +
+            '<h6 class="card-title">Generar Código QR</h6>' +
+            '<div class="mb-3">' +
+            '<label for="qrText" class="form-label">Texto o Código</label>' +
+            '<input type="text" class="form-control" id="qrText" placeholder="Ingrese el texto o código para generar QR">' +
+            '</div>' +
+            '<div class="mb-3">' +
+            '<label for="qrDescription" class="form-label">Descripción (opcional)</label>' +
+            '<input type="text" class="form-control" id="qrDescription" placeholder="Descripción del QR">' +
+            '</div>' +
+            '<button class="btn btn-primary" id="generateCustomQRBtn"><i class="fas fa-qrcode"></i> Generar QR</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="row justify-content-center mt-4" id="qrResult" style="display: none;">' +
+            '<div class="col-md-8">' +
+            '<div class="card shadow-sm">' +
+            '<div class="card-header">' +
+            '<h6 class="card-title mb-0">Código QR Generado</h6>' +
+            '</div>' +
+            '<div class="card-body text-center">' +
+            '<div id="customQrContainer"></div>' +
+            '<p id="customQrInfo" class="mt-2"></p>' +
+            '<button class="btn btn-success mt-3" id="downloadCustomQR"><i class="fas fa-download"></i> Descargar QR</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        $('#content-area').html(qrGeneratorHtml);
+
+        // Event handler for generating custom QR
+        $('#generateCustomQRBtn').click(function () {
+            var text = $('#qrText').val().trim();
+            var description = $('#qrDescription').val().trim();
+            if (!text) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo requerido',
+                    text: 'Por favor, ingrese el texto o código para generar el QR.'
+                });
+                return;
+            }
+            generateCustomQRCode(text, description);
+        });
+    }
+
+    // Function to generate custom QR code
+    function generateCustomQRCode(text, description) {
+        var qrContainer = document.getElementById('customQrContainer');
+        var qrInfo = document.getElementById('customQrInfo');
+
+        // Clear previous QR code
+        qrContainer.innerHTML = '';
+
+        // Generate QR code
+        QRCode.toCanvas(text, { width: 256, height: 256 }, function (error, canvas) {
+            if (error) {
+                console.error(error);
+                qrInfo.textContent = 'Error al generar el código QR.';
+                return;
+            }
+
+            // Append canvas to container
+            qrContainer.appendChild(canvas);
+
+            // Set info text
+            qrInfo.textContent = 'Texto: ' + text + (description ? ' - ' + description : '');
+
+            // Show result
+            $('#qrResult').show();
+
+            // Set up download functionality
+            $('#downloadCustomQR').off('click').on('click', function () {
+                var link = document.createElement('a');
+                link.download = 'qr_custom.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         });
     }
 
