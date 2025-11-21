@@ -137,31 +137,40 @@ $(document).ready(function () {
         $('#search-results').show();
     }
 
-    function renderSearchResults(products) {
-        var resultsHtml = '';
+    // Unified function to render products list
+    function renderProductsList(products, containerId, colClass = 'col-4') {
+        var html = '';
         if (products.length === 0) {
-            resultsHtml = '<div class="col-12"><div class="alert alert-info">No se encontraron productos que coincidan con la búsqueda.</div></div>';
+            html = '<div class="col-12"><div class="alert alert-info">No se encontraron productos.</div></div>';
         } else {
             products.forEach(function(product) {
                 var productInfo = '<strong>Stock:</strong> ' + (product.stock || 0) + ' | <strong>PVP:</strong> $' + (product.pvp || 0) + ' | <strong>Aux:</strong> ' + (product.aux || 0) + ' | <small class="text-muted">ID: ' + product.id_product + '</small>';
                 if (userRole == 1) { // Admin role
                     productInfo = '<strong>Stock:</strong> ' + (product.stock || 0) + ' | <strong>Costo:</strong> $' + (product.cost || 0) + ' | <strong>PVP:</strong> $' + (product.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (product.min || 0) + ' | <strong>Aux:</strong> ' + (product.aux || 0) + ' | <small class="text-muted">ID: ' + product.id_product + '</small>';
                 }
-                var editButton = userRole == 1 ? '<button class="btn btn-sm btn-warning mt-2" onclick="openEditProductModal(' + product.id_product + ', \'' + (product.brand || '') + '\', \'' + (product.description || '') + '\', ' + (product.stock || 0) + ', ' + (product.cost || 0) + ', ' + (product.pvp || 0) + ', ' + (product.min || 0) + ', \'' + (product.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
-                resultsHtml += '<div class="col-12">' +
+                var editButton = userRole == 1 ? '<button class="btn-custom btn-warning-custom mt-2" onclick="openEditProductModal(' + product.id_product + ', \'' + (product.brand || '') + '\', \'' + (product.description || '') + '\', ' + (product.stock || 0) + ', ' + (product.cost || 0) + ', ' + (product.pvp || 0) + ', ' + (product.min || 0) + ', \'' + (product.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
+                var qrButton = '<button class="btn-custom btn-info-custom mt-2" onclick="generateQRCode(\'' + (product.code || '') + '\', \'' + (product.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
+                html += '<div class="' + colClass + '">' +
                     '<div class="card shadow-sm">' +
                     '<div class="card-header bg-primary text-white">' +
-                    '<h6 class="card-title mb-0">' + (product.code || 'N/A') + ' | ' + (product.description || 'N/A') + '</h6>' +
+                    '<h5 class="card-title mb-0">' + (product.code || 'N/A') + ' | ' + (product.description || 'N/A') + '</h5>' +
                     '</div>' +
                     '<div class="card-body">' +
                     '<p class="card-text mb-0">' + productInfo + '</p>' +
+                    '<div class="d-flex gap-1">' +
                     editButton +
+                    qrButton +
+                    '</div>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
             });
         }
-        $('#products-results').html(resultsHtml);
+        $('#' + containerId).html(html);
+    }
+
+    function renderSearchResults(products) {
+        renderProductsList(products, 'products-results', 'col-12');
     }
 
 
@@ -236,31 +245,7 @@ $(document).ready(function () {
         var filteredData = productosData.filter(function (producto) {
             return producto.brand && producto.brand.toLowerCase().includes(searchTerm);
         });
-        var cards = '<div class="row g-3">';
-        filteredData.forEach(function (producto) {
-            var productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
-            if (userRole == 1) { // Admin role
-                productInfo = '<strong>Stock:</strong> ' + (producto.stock || 0) + ' | <strong>Costo:</strong> $' + (producto.cost || 0) + ' | <strong>PVP:</strong> $' + (producto.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (producto.min || 0) + ' | <strong>Aux:</strong> ' + (producto.aux || 0) + ' | <small class="text-muted">ID: ' + producto.id_product + '</small>';
-            }
-            var editButton = userRole == 1 ? '<button class="btn-custom btn-warning-custom mt-2" onclick="openEditProductModal(' + producto.id_product + ', \'' + (producto.brand || '') + '\', \'' + (producto.description || '') + '\', ' + (producto.stock || 0) + ', ' + (producto.cost || 0) + ', ' + (producto.pvp || 0) + ', ' + (producto.min || 0) + ', \'' + (producto.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
-            var qrButton = '<button class="btn-custom btn-info-custom mt-2" onclick="generateQRCode(\'' + (producto.code || '') + '\', \'' + (producto.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
-            cards += '<div class="col-4">' +
-                '<div class="card shadow-sm">' +
-                '<div class="card-header bg-primary text-white">' +
-                '<h5 class="card-title mb-0">' + (producto.code || 'N/A') + ' | ' + (producto.description || 'N/A') + '</h5>' +
-                '</div>' +
-                '<div class="card-body">' +
-                '<p class="card-text mb-0">' + productInfo + '</p>' +
-                '<div class="d-flex gap-1">' +
-                editButton +
-                qrButton +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-        });
-        cards += '</div>';
-        $('#productos-table').html(cards);
+        renderProductsList(filteredData, 'productos-table', 'col-4');
     }
 
 

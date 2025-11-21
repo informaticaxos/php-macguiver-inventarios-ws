@@ -1,12 +1,12 @@
 # TODO - Refactor Frontend from Tailwind to Bootstrap
 
 ## Tareas Pendientes
-- [ ] Update index.html head: Remove Tailwind script/config, add Bootstrap CSS CDN.
-- [ ] Replace Tailwind classes in body with Bootstrap equivalents (e.g., bg-light).
-- [ ] Replace Tailwind classes in header with Bootstrap equivalents (e.g., bg-dark).
-- [ ] Refactor custom modals (createFormModal, etc.) to use Bootstrap modal classes or utilities instead of Tailwind.
-- [ ] Update styles.css to add Bootstrap-compatible custom styles if needed.
-- [ ] Ensure responsive design with Bootstrap grid.
+- [x] Update index.html head: Remove Tailwind script/config, add Bootstrap CSS CDN.
+- [x] Replace Tailwind classes in body with Bootstrap equivalents (e.g., bg-light).
+- [x] Replace Tailwind classes in header with Bootstrap equivalents (e.g., bg-dark).
+- [x] Refactor custom modals (createFormModal, etc.) to use Bootstrap modal classes or utilities instead of Tailwind.
+- [x] Update styles.css to add Bootstrap-compatible custom styles if needed.
+- [x] Ensure responsive design with Bootstrap grid.
 
 ## Información Recopilada
 - index.html uses Tailwind CDN and config, with many Tailwind classes in body, header, and custom modals.
