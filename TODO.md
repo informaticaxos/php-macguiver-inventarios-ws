@@ -1,30 +1,31 @@
-# TODO - Mejora de la Sección de Productos y Funcionalidades Adicionales
+# TODO - Refactor Frontend from Tailwind to Bootstrap
 
 ## Tareas Pendientes
-- [x] Agregar estilos CSS para el contenedor elegante de estadísticas de productos
-- [x] Modificar la función loadProductosStats() en index.js para envolver el recuadro de estadísticas en un div con borde sombreado y estilos tecnológicos
-- [x] Verificar que el diseño se vea iluminado y elegante en la interfaz
-- [x] Agregar sonido de beep al escanear códigos QR en la barra de búsqueda de productos
-- [x] Configurar el escáner QR para usar la cámara trasera por defecto
-- [x] Crear una nueva sección elegante para el título "Productos" y los botones de acción (Actualizar, Nuevo Producto, Importar Excel, Agregar Stock) con diseño UX avanzado
-- [x] Mover estilos inline de index.html a styles.css para mejor organización y mantenimiento
+- [ ] Update index.html head: Remove Tailwind script/config, add Bootstrap CSS CDN.
+- [ ] Replace Tailwind classes in body with Bootstrap equivalents (e.g., bg-light).
+- [ ] Replace Tailwind classes in header with Bootstrap equivalents (e.g., bg-dark).
+- [ ] Refactor custom modals (createFormModal, etc.) to use Bootstrap modal classes or utilities instead of Tailwind.
+- [ ] Update styles.css to add Bootstrap-compatible custom styles if needed.
+- [ ] Ensure responsive design with Bootstrap grid.
 
 ## Información Recopilada
-- La sección de productos se carga en #content-area de index.html
-- Las estadísticas se generan en loadProductosStats() de index.js
-- El HTML actual usa una card de Bootstrap con shadow-sm
-- Nueva sección requerida: contenedor con título y botones, elegante con bordes y efectos visuales
-- Función playBeep() agregada para reproducir sonido al escanear QR
-- Estilos inline movidos a styles.css para evitar duplicación y mejorar la estructura
+- index.html uses Tailwind CDN and config, with many Tailwind classes in body, header, and custom modals.
+- Bootstrap JS is loaded, but CSS is missing; need to add Bootstrap CSS CDN.
+- Sidebar and some modals already use Bootstrap classes.
+- styles.css has custom styles; may need updates for Bootstrap compatibility.
 
 ## Plan de Implementación
-- [x] Crear una clase CSS .stats-container con borde sombreado, gradiente y efectos luminosos
-- [x] Envolver el statsHtml existente en un div con la nueva clase
-- [x] Asegurar que el diseño sea responsive y moderno
-- [x] Implementar función playBeep() usando Web Audio API para sonido de beep
-- [x] Integrar playBeep() en el listener 'scan' del searchScanner
-- [x] Crear clase CSS .actions-header para el contenedor de título y botones con gradientes, sombras y animaciones sutiles
-- [x] Modificar loadProductosStats() para incluir la nueva sección después de las estadísticas
-- [x] Diseñar la disposición de botones de manera intuitiva y accesible
-- [x] Reemplazar estilos inline en index.html con enlace a styles.css
-- [x] Verificar que no queden estilos duplicados o redundantes
+- Update index.html head: Remove Tailwind script/config, add Bootstrap CSS CDN.
+- Replace Tailwind classes in body/header with Bootstrap equivalents (e.g., bg-light, bg-dark).
+- Refactor custom modals to use Bootstrap modal classes or utilities instead of Tailwind.
+- Update styles.css to add Bootstrap-compatible custom styles if needed.
+- Ensure responsive design with Bootstrap grid.
+
+## Dependent Files to be edited
+- frontend/index.html
+- frontend/styles.css
+
+## Followup steps
+- Test design in browser for consistency.
+- Verify modal functionality and responsiveness.
+- Check sidebar navigation on different screen sizes.
