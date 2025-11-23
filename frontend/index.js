@@ -1178,6 +1178,7 @@ $(document).ready(function () {
                                 <canvas id="printQrCanvas" class="qr-code"></canvas>
                             </div>
                             <div class="right-half">
+                                <div><strong style="font-size:11px;">CODIGO : ${code}</strong></div>
                                 <div class="description">${description || ''}</div>
                             </div>
                         </div>
