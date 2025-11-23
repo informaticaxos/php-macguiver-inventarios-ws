@@ -1124,8 +1124,8 @@ $(document).ready(function () {
                 <style>
                     @media print {
                         @page {
-                            size: 100mm 50mm;
-                            margin: 10mm;
+                            size: 57mm 27mm;
+                            margin: 5mm;
                         }
                         body {
                             margin: 0;
@@ -1138,8 +1138,8 @@ $(document).ready(function () {
                         padding: 10px;
                     }
                     .label-container {
-                        width: 100mm;
-                        height: 50mm;
+                        width: 57mm;
+                        height: 27mm;
                         display: flex;
                         border: 1px solid #000;
                         box-sizing: border-box;
@@ -1150,22 +1150,22 @@ $(document).ready(function () {
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
-                        padding: 5px;
+                        padding: 3px;
                         box-sizing: border-box;
                     }
                     .brand-text {
-                        font-size: 8px;
-                        margin-bottom: 4px;
+                        font-size: 6px;
+                        margin-bottom: 2px;
                         text-align: center;
                         width: 100%;
                     }
                     .qr-code {
-                        width: 80px;
-                        height: 80px;
+                        width: 50px;
+                        height: 50px;
                     }
                     .description {
-                        font-size: 12px;
-                        padding-left: 5px;
+                        font-size: 10px;
+                        padding-left: 3px;
                         text-align: left;
                         word-wrap: break-word;
                         width: 90%;
@@ -1186,7 +1186,7 @@ $(document).ready(function () {
                 <script>
                     window.onload = function() {
                         var canvas = document.getElementById('printQrCanvas');
-                        QRCode.toCanvas(canvas, '${code}', { width: 80, height: 80 }, function (error) {
+                        QRCode.toCanvas(canvas, '${code}', { width: 50, height: 50 }, function (error) {
                             if (error) console.error(error);
                             window.print();
                         });
