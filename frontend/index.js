@@ -1141,7 +1141,7 @@ $(document).ready(function () {
                         width: 55mm;
                         height: 25mm;
                         display: flex;
-                        border: 1px solid #000;
+                        /* border: 1px solid #000;*/
                         box-sizing: border-box;
                     }
                     .left-half, .right-half {
@@ -1150,7 +1150,7 @@ $(document).ready(function () {
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
-                        padding: 3px;
+                        padding: 1px;
                         box-sizing: border-box;
                     }
                     .brand-text {
