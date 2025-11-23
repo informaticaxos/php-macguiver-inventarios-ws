@@ -1138,10 +1138,9 @@ $(document).ready(function () {
                         padding: 1px;
                     }
                     .label-container {
-                        width: 55mm;
-                        height: 25mm;
+                        width: 57mm;
+                        height: 27mm;
                         display: flex;
-                        /* border: 1px solid #000;*/
                         box-sizing: border-box;
                     }
                     .left-half, .right-half {
@@ -1160,8 +1159,8 @@ $(document).ready(function () {
                         width: 100%;
                     }
                     .qr-code {
-                        width: 500px;
-                        height: 500px;
+                        width: 86px;
+                        height: 86px;
                     }
                     .description {
                         font-size: 10px;
@@ -1171,29 +1170,29 @@ $(document).ready(function () {
                         width: 80%;
                     }
                 </style>
-            </head>
-            <body>
-                <div class="label-container">
-                    <div class="left-half">
-                        <div class="brand-text">${brand || ''}</div>
-                        <canvas id="printQrCanvas" class="qr-code"></canvas>
-                    </div>
-                    <div class="right-half">
-                        <div class="description">${description || ''}</div>
-                    </div>
-                </div>
-                <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-                <script>
-                    window.onload = function() {
-                        var canvas = document.getElementById('printQrCanvas');
-                        QRCode.toCanvas(canvas, '${code}', { width: 50, height: 50 }, function (error) {
-                            if (error) console.error(error);
-                            window.print();
-                        });
-                    };
-                <\/script>
-            </body>
-            </html>
+                    </head>
+                    <body>
+                        <div class="label-container">
+                            <div class="left-half">
+                                <div class="brand-text">${brand || ''}</div>
+                                <canvas id="printQrCanvas" class="qr-code"></canvas>
+                            </div>
+                            <div class="right-half">
+                                <div class="description">${description || ''}</div>
+                            </div>
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+                        <script>
+                            window.onload = function() {
+                                var canvas = document.getElementById('printQrCanvas');
+                                QRCode.toCanvas(canvas, '${code}', { width: 86, height: 86 }, function (error) {
+                                    if (error) console.error(error);
+                                    window.print();
+                                });
+                            };
+                        <\/script>
+                    </body>
+                    </html>
         `;
         printWindow.document.write(htmlContent);
         printWindow.document.close();
