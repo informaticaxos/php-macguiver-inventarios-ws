@@ -1125,7 +1125,7 @@ $(document).ready(function () {
                     @media print {
                         @page {
                             size: 57mm 27mm;
-                            margin: 1mm;
+                            margin: 0mm;
                         }
                         body {
                             margin: 0;
@@ -1135,7 +1135,7 @@ $(document).ready(function () {
                     body {
                         font-family: Arial, sans-serif;
                         margin: 0;
-                        padding: 5px;
+                        padding: 1px;
                     }
                     .label-container {
                         width: 57mm;
@@ -1160,8 +1160,8 @@ $(document).ready(function () {
                         width: 100%;
                     }
                     .qr-code {
-                        width: 80px;
-                        height: 80px;
+                        width: 200px;
+                        height: 200px;
                     }
                     .description {
                         font-size: 10px;
