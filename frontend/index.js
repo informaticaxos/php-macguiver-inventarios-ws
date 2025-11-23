@@ -140,7 +140,7 @@ $(document).ready(function () {
                     productInfo = '<strong>Stock:</strong> ' + (product.stock || 0) + ' | <strong>Costo:</strong> $' + (product.cost || 0) + ' | <strong>PVP:</strong> $' + (product.pvp || 0) + ' | <strong>Mínimo:</strong> ' + (product.min || 0) + ' | <strong>Aux:</strong> ' + (product.aux || 0) + ' | <small class="text-muted">ID: ' + product.id_product + '</small>';
                 }
                 var editButton = userRole == 1 ? '<button class="btn-custom btn-warning-custom mt-2" onclick="openEditProductModal(' + product.id_product + ', \'' + (product.brand || '') + '\', \'' + (product.description || '') + '\', ' + (product.stock || 0) + ', ' + (product.cost || 0) + ', ' + (product.pvp || 0) + ', ' + (product.min || 0) + ', \'' + (product.code || '') + '\')"><i class="fas fa-edit"></i> Editar</button>' : '';
-                var qrButton = '<button class="btn-custom btn-info-custom mt-2" onclick="generateQRCode(\'' + (product.code || '') + '\', \'' + (product.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
+                var qrButton = '<button class="btn-custom btn-info-custom mt-2" onclick="generateQRCode(\'' + (product.aux || '') + '\', \'' + (product.description || '') + '\')"><i class="fas fa-qrcode"></i> QR</button>';
                 html += '<div class="' + colClass + '">' +
                     '<div class="card shadow-sm">' +
                     '<div class="card-header bg-primary text-white">' +
