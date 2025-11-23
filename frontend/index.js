@@ -1138,8 +1138,8 @@ $(document).ready(function () {
                         padding: 1px;
                     }
                     .label-container {
-                        width: 57mm;
-                        height: 27mm;
+                        width: 55mm;
+                        height: 25mm;
                         display: flex;
                         border: 1px solid #000;
                         box-sizing: border-box;
@@ -1160,15 +1160,15 @@ $(document).ready(function () {
                         width: 100%;
                     }
                     .qr-code {
-                        width: 200px;
-                        height: 200px;
+                        width: 500px;
+                        height: 500px;
                     }
                     .description {
                         font-size: 10px;
-                        padding-left: 3px;
+                        padding-left: 2px;
                         text-align: left;
                         word-wrap: break-word;
-                        width: 90%;
+                        width: 80%;
                     }
                 </style>
             </head>
