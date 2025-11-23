@@ -1143,8 +1143,17 @@ $(document).ready(function () {
                         display: flex;
                         box-sizing: border-box;
                     }
-                    .left-half, .right-half {
-                        width: 50%;
+                    .left-half {
+                        width: 40%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 1px;
+                        box-sizing: border-box;
+                    }
+                    .right-half {
+                        width: 60%;
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
@@ -1175,13 +1184,13 @@ $(document).ready(function () {
                         <div class="label-container">
                             <div class="left-half">
                                 <div class="brand-text">${brand || ''}</div>
+                                <div style="font-size:7px; margin-bottom:2px; text-align:center; width:100%;">brad</div>
                                 <canvas id="printQrCanvas" class="qr-code"></canvas>
                             </div>
                             <div class="right-half">
                                 <div><strong style="font-size:11px;">CODIGO : ${code}</strong></div>
                                 <div class="description">${description || ''}</div>
                             </div>
-                        </div>
                         <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
                         <script>
                             window.onload = function() {
