@@ -1062,7 +1062,7 @@ $(document).ready(function () {
     }
 
     // Generate QR Code function
-    window.generateQRCode = function (code, description) {
+    window.generateQRCode = function (code, description, brand) {
         var qrContainer = document.getElementById('qr-code-container');
         var qrInfo = document.getElementById('qr-code-info');
 
@@ -1093,6 +1093,109 @@ $(document).ready(function () {
                 link.href = canvas.toDataURL();
                 link.click();
             });
+
+            // Add print button if not already added
+            if (!document.getElementById('printQRBtn')) {
+                var printBtn = document.createElement('button');
+                printBtn.id = 'printQRBtn';
+                printBtn.className = 'btn btn-primary mt-2';
+                printBtn.textContent = 'Imprimir Etiqueta';
+                printBtn.style.marginLeft = '10px';
+                printBtn.onclick = function () {
+                    printLabel(code, description, brand);
+                };
+                qrInfo.parentNode.appendChild(printBtn);
+            } else {
+                // Update print button onclick in case brand changes
+                document.getElementById('printQRBtn').onclick = function () {
+                    printLabel(code, description, brand);
+                };
+            }
         });
+    };
+
+    // Function to print label in a new tab with formatted content
+    window.printLabel = function (code, description, brand) {
+        var printWindow = window.open('', '_blank');
+        var htmlContent = `
+            <html>
+            <head>
+                <title>Etiqueta Producto</title>
+                <style>
+                    @media print {
+                        @page {
+                            size: 100mm 50mm;
+                            margin: 10mm;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 10px;
+                    }
+                    .label-container {
+                        width: 100mm;
+                        height: 50mm;
+                        display: flex;
+                        border: 1px solid #000;
+                        box-sizing: border-box;
+                    }
+                    .left-half, .right-half {
+                        width: 50%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 5px;
+                        box-sizing: border-box;
+                    }
+                    .brand-text {
+                        font-size: 8px;
+                        margin-bottom: 4px;
+                        text-align: center;
+                        width: 100%;
+                    }
+                    .qr-code {
+                        width: 80px;
+                        height: 80px;
+                    }
+                    .description {
+                        font-size: 12px;
+                        padding-left: 5px;
+                        text-align: left;
+                        word-wrap: break-word;
+                        width: 90%;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="label-container">
+                    <div class="left-half">
+                        <div class="brand-text">${brand || ''}</div>
+                        <canvas id="printQrCanvas" class="qr-code"></canvas>
+                    </div>
+                    <div class="right-half">
+                        <div class="description">${description || ''}</div>
+                    </div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+                <script>
+                    window.onload = function() {
+                        var canvas = document.getElementById('printQrCanvas');
+                        QRCode.toCanvas(canvas, '${code}', { width: 80, height: 80 }, function (error) {
+                            if (error) console.error(error);
+                            window.print();
+                        });
+                    };
+                <\/script>
+            </body>
+            </html>
+        `;
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
     };
 });
