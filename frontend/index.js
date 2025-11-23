@@ -1138,8 +1138,8 @@ $(document).ready(function () {
                         padding: 1px;
                     }
                     .label-container {
-                        width: 57mm;
-                        height: 27mm;
+                        width: 55mm;
+                        height: 25mm;
                         display: flex;
                         box-sizing: border-box;
                     }
