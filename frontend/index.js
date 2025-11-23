@@ -1184,7 +1184,7 @@ $(document).ready(function () {
                         <div class="label-container">
                             <div class="left-half">
                                 <div class="brand-text">${brand || ''}</div>
-                                <div style="font-size:7px; margin-bottom:2px; text-align:center; width:100%;">brad</div>
+                                <div style="font-size:7px; margin-bottom:2px; text-align:center; width:100%;">${brand || ''}</div>
                                 <canvas id="printQrCanvas" class="qr-code"></canvas>
                             </div>
                             <div class="right-half">
