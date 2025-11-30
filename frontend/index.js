@@ -1141,61 +1141,51 @@ $(document).ready(function () {
                         width: 55mm;
                         height: 25mm;
                         display: flex;
-                        box-sizing: border-box;
-                    }
-                    .left-half {
-                        width: 40%;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
+                        flex-direction: row;
                         align-items: center;
-                        padding: 1px;
+                        justify-content: space-between;
                         box-sizing: border-box;
-                    }
-                    .right-half {
-                        width: 60%;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
                         padding: 1px;
-                        box-sizing: border-box;
                     }
                     .brand-text {
                         font-size: 6px;
-                        margin-bottom: 2px;
                         text-align: center;
-                        width: 100%;
+                        flex: 0 0 auto;
+                        margin-right: 2px;
                     }
                     .qr-code {
-                        width: 86px;
-                        height: 86px;
+                        width: 20mm;
+                        height: 20mm;
+                        flex: 0 0 auto;
+                        margin-right: 2px;
+                    }
+                    .code-text {
+                        font-size: 10px;
+                        font-weight: bold;
+                        flex: 0 0 auto;
+                        margin-right: 2px;
                     }
                     .description {
-                        font-size: 10px;
-                        padding-left: 2px;
+                        font-size: 8px;
                         text-align: left;
                         word-wrap: break-word;
-                        width: 80%;
+                        flex: 1;
+                        overflow: hidden;
                     }
                 </style>
                     </head>
                     <body>
                         <div class="label-container">
-                            <div class="left-half">
-                                <div class="brand-text">${brand || ''}</div>
-                                <div style="font-size:7px; margin-bottom:2px; text-align:center; width:100%;">${brand || ''}</div>
-                                <canvas id="printQrCanvas" class="qr-code"></canvas>
-                            </div>
-                            <div class="right-half">
-                                <div><strong style="font-size:11px;">CODIGO : ${code}</strong></div>
-                                <div class="description">${description || ''}</div>
-                            </div>
+                            <div class="brand-text">${brand || ''}</div>
+                            <canvas id="printQrCanvas" class="qr-code"></canvas>
+                            <div class="code-text">COD: ${code}</div>
+                            <div class="description">${description || ''}</div>
+                        </div>
                         <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
                         <script>
                             window.onload = function() {
                                 var canvas = document.getElementById('printQrCanvas');
-                                QRCode.toCanvas(canvas, '${code}', { width: 86, height: 86 }, function (error) {
+                                QRCode.toCanvas(canvas, '${code}', { width: 50, height: 50 }, function (error) {
                                     if (error) console.error(error);
                                     window.print();
                                 });
