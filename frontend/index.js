@@ -1126,6 +1126,7 @@ $(document).ready(function () {
                         @page {
                             size: 57mm 27mm;
                             margin: 0mm;
+                            orientation: landscape;
                         }
                         body {
                             margin: 0;
