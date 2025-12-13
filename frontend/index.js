@@ -1117,6 +1117,8 @@ $(document).ready(function () {
     // Function to print label in a new tab with formatted content
     window.printLabel = function (code, description, brand) {
         var printWindow = window.open('', '_blank');
+        var labelHtml = '<div class="label-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div>';
+        var repeatedLabels = labelHtml.repeat(5);
         var htmlContent = `
             <html>
             <head>
@@ -1124,7 +1126,7 @@ $(document).ready(function () {
                 <style>
                     @media print {
                         @page {
-                            size: 80mm 30mm;
+                            size: 80mm 150mm;
                             margin: 0mm;
                             orientation: landscape;
                         }
@@ -1132,7 +1134,7 @@ $(document).ready(function () {
         margin: 0;
         padding: 0;
         width: 80mm;
-        height: 30mm;
+        height: 150mm;
         transform: rotate(-90deg);
         transform-origin: top left;
     }
@@ -1146,11 +1148,7 @@ $(document).ready(function () {
                             justify-content: space-between;
                             box-sizing: border-box;
                             padding: 1px;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%) rotate(-90deg);
-                            transform-origin: center;
+                            margin-bottom: 2mm;
                         }
                         .brand-text {
                             font-size: 8px;
@@ -1196,6 +1194,7 @@ $(document).ready(function () {
                         justify-content: space-between;
                         box-sizing: border-box;
                         padding: 1px;
+                        margin-bottom: 2mm;
                     }
                     .brand-text {
                         font-size: 8px;
@@ -1229,20 +1228,17 @@ $(document).ready(function () {
                 </style>
                     </head>
                     <body>
-                        <div class="label-container">
-                            <div class="brand-text">${brand || ''}</div>
-                            <canvas id="printQrCanvas" class="qr-code"></canvas>
-                            <div class="code-text">COD: ${code}</div>
-                            <div class="description">${description || ''}</div>
-                        </div>
+                        ${repeatedLabels}
                         <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
                         <script>
                             window.onload = function() {
-                                var canvas = document.getElementById('printQrCanvas');
-                                QRCode.toCanvas(canvas, '${code}', { width: 60, height: 60 }, function (error) {
-                                    if (error) console.error(error);
-                                    window.print();
+                                var canvases = document.querySelectorAll('.qr-code');
+                                canvases.forEach(function(canvas) {
+                                    QRCode.toCanvas(canvas, '${code}', { width: 60, height: 60 }, function (error) {
+                                        if (error) console.error(error);
+                                    });
                                 });
+                                window.print();
                             };
                         <\/script>
                     </body>
