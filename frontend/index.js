@@ -1140,7 +1140,7 @@ $(document).ready(function () {
                             width: 78mm;
                             height: 42mm;
                             box-sizing: border-box;
-                            padding: 2px;
+                            padding: 0;
                             margin-bottom: 0mm;
                             display: flex;
                             justify-content: center;
@@ -1205,7 +1205,7 @@ $(document).ready(function () {
                     body {
                         font-family: Arial, sans-serif;
                         margin: 0;
-                        padding: 1px;
+                        padding: 0;
                     }
                     .label-container {
                         width: 78mm;
@@ -1215,7 +1215,7 @@ $(document).ready(function () {
                         align-items: center;
                         justify-content: space-between;
                         box-sizing: border-box;
-                        padding: 1px;
+                        padding: 0;
                         margin-bottom: 0mm;
                     }
                     .brand-text {
