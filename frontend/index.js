@@ -1128,14 +1128,15 @@ $(document).ready(function () {
                             margin: 0mm;
                             orientation: landscape;
                         }
-                        body {
-                            margin: 0;
-                            padding: 0;
-                            width: 80mm;
-                            height: 30mm;
-                            transform: rotate(-90deg);
-                            transform-origin: top left;
-                        }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 80mm;
+        height: 30mm;
+        transform: rotate(-90deg);
+        transform-origin: top left;
+    }
+
                         .label-container {
                             width: 78mm;
                             height: 28mm;
@@ -1145,6 +1146,11 @@ $(document).ready(function () {
                             justify-content: space-between;
                             box-sizing: border-box;
                             padding: 1px;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%) rotate(-90deg);
+                            transform-origin: center;
                         }
                         .brand-text {
                             font-size: 8px;
