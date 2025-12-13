@@ -1149,7 +1149,7 @@ $(document).ready(function () {
                         }
                         .inner-container {
                             width: 38mm;
-                            height: 24mm;
+                            height: 38mm;
                             border: 1px solid black;
                             box-sizing: border-box;
                             padding: 1px;
