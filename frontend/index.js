@@ -1216,7 +1216,7 @@ $(document).ready(function () {
                         justify-content: space-between;
                         box-sizing: border-box;
                         padding: 1px;
-                        margin-bottom: 2mm;
+                        margin-bottom: 0mm;
                     }
                     .brand-text {
                         font-size: 8px;
