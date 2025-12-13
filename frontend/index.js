@@ -1138,8 +1138,7 @@ $(document).ready(function () {
 
                         .label-container {
                             width: 78mm;
-                            height: 28mm;
-                            border: 1px solid black;
+                            height: 42mm;
                             box-sizing: border-box;
                             padding: 2px;
                             margin-bottom: 2mm;
@@ -1150,33 +1149,43 @@ $(document).ready(function () {
                         .inner-container {
                             width: 38mm;
                             height: 38mm;
-                            border: 1px solid black;
                             box-sizing: border-box;
-                            padding: 1px;
+                            border: none;
                             display: flex;
                             flex-direction: row;
                             align-items: center;
-                            justify-content: space-between;
+                            justify-content: flex-start;
+                            padding: 0;
+                            margin: 0;
+                        }
+                        .inner-container * {
+                            margin: 0;
+                            padding: 0;
+                            border: none;
+                            box-sizing: border-box;
                         }
                         .brand-text {
                             font-size: 6px;
                             text-align: center;
                             flex: 0 0 auto;
-                            margin-right: 1px;
+                            margin-right: 0;
                             writing-mode: horizontal-tb;
                             text-orientation: mixed;
                             transform: none;
+                            border: none;
                         }
                         .qr-code {
                             width: 16mm;
                             height: 16mm;
                             flex: 0 0 auto;
-                            margin-right: 1px;
+                            margin-right: 0;
+                            border: none;
                         }
                         .text-container {
                             display: flex;
                             flex-direction: column;
                             flex: 1;
+                            border: none;
                         }
                         .code-text {
                             font-size: 9px;
