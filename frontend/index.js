@@ -1137,7 +1137,7 @@ $(document).ready(function () {
     }
 
                         .label-container {
-                            width: 78mm;
+                            width: 35mm;
                             height: 28mm;
                             display: flex;
                             flex-direction: row;
@@ -1145,28 +1145,22 @@ $(document).ready(function () {
                             justify-content: space-between;
                             box-sizing: border-box;
                             padding: 1px;
-                            margin-bottom: 2mm;
+                            margin: 0 auto 2mm auto;
                         }
                         .brand-text {
-                            font-size: 8px;
+                            font-size: 6px;
                             text-align: center;
                             flex: 0 0 auto;
-                            margin-right: 3px;
+                            margin-right: 2px;
                             writing-mode: horizontal-tb;
                             text-orientation: mixed;
                             transform: none;
                         }
                         .qr-code {
-                            width: 24mm;
-                            height: 24mm;
+                            width: 18mm;
+                            height: 18mm;
                             flex: 0 0 auto;
-                            margin-right: 3px;
-                        }
-                        .code-text {
-                            font-size: 12px;
-                            font-weight: bold;
-                            flex: 0 0 auto;
-                            margin-right: 3px;
+                            margin-right: 2px;
                         }
                         .text-container {
                             display: flex;
@@ -1174,18 +1168,18 @@ $(document).ready(function () {
                             flex: 1;
                         }
                         .code-text {
-                            font-size: 12px;
+                            font-size: 10px;
                             font-weight: bold;
                             text-align: center;
-                            margin-bottom: 2px;
+                            margin-bottom: 1px;
                         }
                         .description {
-                            font-size: 10px;
+                            font-size: 8px;
                             text-align: left;
                             word-wrap: break-word;
                             flex: 1;
                             overflow: hidden;
-                            line-height: 1.1;
+                            line-height: 1.0;
                         }
                     }
                     body {
