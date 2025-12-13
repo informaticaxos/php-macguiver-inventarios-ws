@@ -1127,7 +1127,7 @@ $(document).ready(function () {
                     @media print {
                         @page {
                             size: 80mm 150mm;
-                            margin: 3mm 0mm 0mm 0mm;
+                            margin: 30mm 0mm 0mm 0mm;
                         }
     body {
         margin: 0;
