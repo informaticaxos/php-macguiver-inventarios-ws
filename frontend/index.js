@@ -1131,6 +1131,47 @@ $(document).ready(function () {
                         body {
                             margin: 0;
                             padding: 0;
+                            width: 80mm;
+                            height: 30mm;
+                        }
+                        .label-container {
+                            width: 78mm;
+                            height: 28mm;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: space-between;
+                            box-sizing: border-box;
+                            padding: 1px;
+                        }
+                        .brand-text {
+                            font-size: 8px;
+                            text-align: center;
+                            flex: 0 0 auto;
+                            margin-right: 3px;
+                            writing-mode: horizontal-tb;
+                            text-orientation: mixed;
+                            transform: none;
+                        }
+                        .qr-code {
+                            width: 24mm;
+                            height: 24mm;
+                            flex: 0 0 auto;
+                            margin-right: 3px;
+                        }
+                        .code-text {
+                            font-size: 12px;
+                            font-weight: bold;
+                            flex: 0 0 auto;
+                            margin-right: 3px;
+                        }
+                        .description {
+                            font-size: 10px;
+                            text-align: left;
+                            word-wrap: break-word;
+                            flex: 1;
+                            overflow: hidden;
+                            line-height: 1.1;
                         }
                     }
                     body {
@@ -1153,9 +1194,9 @@ $(document).ready(function () {
                         text-align: center;
                         flex: 0 0 auto;
                         margin-right: 3px;
-                        writing-mode: vertical-rl;
+                        writing-mode: horizontal-tb;
                         text-orientation: mixed;
-                        transform: rotate(180deg);
+                        transform: none;
                     }
                     .qr-code {
                         width: 24mm;
