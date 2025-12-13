@@ -1117,7 +1117,7 @@ $(document).ready(function () {
     // Function to print label in a new tab with formatted content
     window.printLabel = function (code, description, brand) {
         var printWindow = window.open('', '_blank');
-        var labelHtml = `<div class="label-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div>`;
+        var labelHtml = `<div class="label-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="text-container"><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div></div>`;
         var repeatedLabels = labelHtml.repeat(5);
         var htmlContent = `
             <html>
@@ -1167,6 +1167,17 @@ $(document).ready(function () {
                             font-weight: bold;
                             flex: 0 0 auto;
                             margin-right: 3px;
+                        }
+                        .text-container {
+                            display: flex;
+                            flex-direction: column;
+                            flex: 1;
+                        }
+                        .code-text {
+                            font-size: 12px;
+                            font-weight: bold;
+                            text-align: center;
+                            margin-bottom: 2px;
                         }
                         .description {
                             font-size: 10px;
