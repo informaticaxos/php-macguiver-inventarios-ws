@@ -1124,7 +1124,7 @@ $(document).ready(function () {
                 <style>
                     @media print {
                         @page {
-                            size: 57mm 27mm;
+                            size: 80mm 30mm;
                             margin: 0mm;
                             orientation: landscape;
                         }
@@ -1139,8 +1139,8 @@ $(document).ready(function () {
                         padding: 1px;
                     }
                     .label-container {
-                        width: 55mm;
-                        height: 25mm;
+                        width: 78mm;
+                        height: 28mm;
                         display: flex;
                         flex-direction: row;
                         align-items: center;
@@ -1149,29 +1149,33 @@ $(document).ready(function () {
                         padding: 1px;
                     }
                     .brand-text {
-                        font-size: 6px;
+                        font-size: 8px;
                         text-align: center;
                         flex: 0 0 auto;
-                        margin-right: 2px;
+                        margin-right: 3px;
+                        writing-mode: vertical-rl;
+                        text-orientation: mixed;
+                        transform: rotate(180deg);
                     }
                     .qr-code {
-                        width: 20mm;
-                        height: 20mm;
+                        width: 24mm;
+                        height: 24mm;
                         flex: 0 0 auto;
-                        margin-right: 2px;
+                        margin-right: 3px;
                     }
                     .code-text {
-                        font-size: 10px;
+                        font-size: 12px;
                         font-weight: bold;
                         flex: 0 0 auto;
-                        margin-right: 2px;
+                        margin-right: 3px;
                     }
                     .description {
-                        font-size: 8px;
+                        font-size: 10px;
                         text-align: left;
                         word-wrap: break-word;
                         flex: 1;
                         overflow: hidden;
+                        line-height: 1.1;
                     }
                 </style>
                     </head>
@@ -1186,7 +1190,7 @@ $(document).ready(function () {
                         <script>
                             window.onload = function() {
                                 var canvas = document.getElementById('printQrCanvas');
-                                QRCode.toCanvas(canvas, '${code}', { width: 50, height: 50 }, function (error) {
+                                QRCode.toCanvas(canvas, '${code}', { width: 60, height: 60 }, function (error) {
                                     if (error) console.error(error);
                                     window.print();
                                 });
