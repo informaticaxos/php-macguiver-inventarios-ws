@@ -78,7 +78,7 @@ class ProductRepository
     {
         if ($product->getIdProduct()) {
             // Actualizar
-            $stmt = $this->pdo->prepare("UPDATE products SET brand = ?, description = ?, stock = ?, cost = ?, pvp = ?, min = ?, code = ?, aux = ? WHERE id_product = ?");
+            $stmt = $this->pdo->prepare("UPDATE products SET brand = ?, description = ?, stock = ?, cost = ?, pvp = ?, min = ?, code = ?, aux = ?, percha = ? WHERE id_product = ?");
             $stmt->execute([
                 $product->getBrand(),
                 $product->getDescription(),
@@ -88,11 +88,12 @@ class ProductRepository
                 $product->getMin(),
                 $product->getCode(),
                 $product->getAux(),
+                $product->getPercha(),
                 $product->getIdProduct()
             ]);
         } else {
             // Insertar
-            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux, percha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $product->getBrand(),
                 $product->getDescription(),
@@ -101,7 +102,8 @@ class ProductRepository
                 $product->getPvp(),
                 $product->getMin(),
                 $product->getCode(),
-                $product->getAux()
+                $product->getAux(),
+                $product->getPercha()
             ]);
             $product->setIdProduct($this->pdo->lastInsertId());
         }
@@ -123,7 +125,7 @@ class ProductRepository
             $this->pdo->beginTransaction();
 
             // Preparar la consulta de inserción
-            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux, percha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             $inserted = 0;
             foreach ($products as $product) {
@@ -135,7 +137,8 @@ class ProductRepository
                     $product['pvp'],
                     $product['min'],
                     $product['code'],
-                    $product['aux']
+                    $product['aux'],
+                    $product['percha'] ?? ''
                 ]);
                 $inserted++;
             }

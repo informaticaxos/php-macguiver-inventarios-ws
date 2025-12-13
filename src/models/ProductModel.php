@@ -2,7 +2,7 @@
 
 /**
  * Modelo para la tabla products
- * Representa una entidad básica con campos: id_product, brand, description, stock, cost, pvp, min, code, aux
+ * Representa una entidad básica con campos: id_product, brand, description, stock, cost, pvp, min, code, aux, percha
  */
 class Product
 {
@@ -15,6 +15,7 @@ class Product
     private $min;
     private $code;
     private $aux;
+    private $percha;
 
     /**
      * Constructor de la clase Product
@@ -28,8 +29,9 @@ class Product
      * @param int $min
      * @param string $code
      * @param string $aux
+     * @param string $percha
      */
-    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '', $aux = '')
+    public function __construct($id_product = null, $brand = '', $description = '', $stock = 0, $cost = 0.0, $pvp = 0.0, $min = 0, $code = '', $aux = '', $percha = '')
     {
         $this->id_product = $id_product;
         $this->brand = $brand;
@@ -40,6 +42,7 @@ class Product
         $this->min = $min;
         $this->code = $code;
         $this->aux = $aux;
+        $this->percha = $percha;
     }
 
     // Getters
@@ -90,6 +93,11 @@ class Product
         return $this->aux;
     }
 
+    public function getPercha()
+    {
+        return $this->percha;
+    }
+
     // Setters
     public function setIdProduct($id_product)
     {
@@ -138,6 +146,11 @@ class Product
         $this->aux = $aux;
     }
 
+    public function setPercha($percha)
+    {
+        $this->percha = $percha;
+    }
+
     /**
      * Método para convertir el objeto a array (útil para JSON responses)
      *
@@ -155,6 +168,7 @@ class Product
             'min' => $this->min,
             'code' => $this->code,
             'aux' => $this->aux,
+            'percha' => $this->percha,
         ];
     }
 }

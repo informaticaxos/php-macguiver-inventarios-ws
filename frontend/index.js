@@ -698,6 +698,7 @@ $(document).ready(function () {
         var pvp = $('#productPvp').val().trim();
         var min = $('#productMin').val().trim();
         var code = $('#productCode').val().trim();
+        var percha = $('#productPercha').val().trim();
 
         console.log('Paso 2: Valores obtenidos del formulario', {
             brand: brand,
@@ -706,7 +707,8 @@ $(document).ready(function () {
             cost: cost,
             pvp: pvp,
             min: min,
-            code: code
+            code: code,
+            percha: percha
         });
 
         console.log('Paso 3: Validando que todos los campos estén completos...');
@@ -720,7 +722,8 @@ $(document).ready(function () {
                 cost: parseFloat(cost),
                 pvp: parseFloat(pvp),
                 min: parseInt(min),
-                code: code
+                code: code,
+                percha: percha
             };
 
             console.log('Paso 5: Datos a enviar al servidor', dataToSend);
@@ -773,7 +776,7 @@ $(document).ready(function () {
     });
 
     // Open edit product modal
-    window.openEditProductModal = function (id, brand, description, stock, cost, pvp, min, code) {
+    window.openEditProductModal = function (id, brand, description, stock, cost, pvp, min, code, percha) {
         $('#editProductId').val(id);
         $('#editProductBrand').val(brand);
         $('#editProductDescription').val(description);
@@ -782,6 +785,7 @@ $(document).ready(function () {
         $('#editProductPvp').val(pvp);
         $('#editProductMin').val(min);
         $('#editProductCode').val(code);
+        $('#editProductPercha').val(percha || '');
         $('#editProductModal').modal('show');
     };
 
@@ -795,6 +799,7 @@ $(document).ready(function () {
         var pvp = $('#editProductPvp').val().trim();
         var min = $('#editProductMin').val().trim();
         var code = $('#editProductCode').val().trim();
+        var percha = $('#editProductPercha').val().trim();
 
         if (brand !== '' && description !== '' && stock !== '' && cost !== '' && pvp !== '' && min !== '' && code !== '') {
             $.ajax({
@@ -808,7 +813,8 @@ $(document).ready(function () {
                     cost: parseFloat(cost),
                     pvp: parseFloat(pvp),
                     min: parseInt(min),
-                    code: code
+                    code: code,
+                    percha: percha
                 }),
                 success: function (response) {
                     Swal.fire({

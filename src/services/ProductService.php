@@ -62,7 +62,7 @@ class ProductService
         $maxAux = $this->getMaxAux() ?? 0;
         $data['aux'] = (string)($maxAux + 1);
 
-        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux']);
+        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux'], $data['percha'] ?? '');
         $this->repository->save($product);
         return $product;
     }
@@ -92,7 +92,7 @@ class ProductService
             return null; // Code ya existe en otro producto
         }
 
-        $product = new Product($id, $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code'], $data['aux'] ?? $existing['aux']);
+        $product = new Product($id, $data['brand'] ?? $existing['brand'], $data['description'] ?? $existing['description'], $data['stock'] ?? $existing['stock'], $data['cost'] ?? $existing['cost'], $data['pvp'] ?? $existing['pvp'], $data['min'] ?? $existing['min'], $data['code'], $data['aux'] ?? $existing['aux'], $data['percha'] ?? $existing['percha']);
         $this->repository->save($product);
         return $product;
     }
@@ -162,7 +162,8 @@ class ProductService
                     $productData['pvp'] ?? 0.0,
                     $productData['min'] ?? 0,
                     $productData['code'],
-                    $productData['aux']
+                    $productData['aux'],
+                    $productData['percha'] ?? ''
                 );
 
                 $this->repository->save($product);
