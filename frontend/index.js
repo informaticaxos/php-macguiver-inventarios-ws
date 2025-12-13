@@ -1117,7 +1117,7 @@ $(document).ready(function () {
     // Function to print label in a new tab with formatted content
     window.printLabel = function (code, description, brand) {
         var printWindow = window.open('', '_blank');
-        var labelHtml = `<div class="label-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="text-container"><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div></div>`;
+        var labelHtml = `<div class="label-container"><div class="inner-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="text-container"><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div></div></div>`;
         var repeatedLabels = labelHtml.repeat(5);
         var htmlContent = `
             <html>
@@ -1137,30 +1137,41 @@ $(document).ready(function () {
     }
 
                         .label-container {
-                            width: 35mm;
+                            width: 78mm;
                             height: 28mm;
+                            border: 1px solid black;
+                            box-sizing: border-box;
+                            padding: 2px;
+                            margin-bottom: 2mm;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .inner-container {
+                            width: 38mm;
+                            height: 24mm;
+                            border: 1px solid black;
+                            box-sizing: border-box;
+                            padding: 1px;
                             display: flex;
                             flex-direction: row;
                             align-items: center;
                             justify-content: space-between;
-                            box-sizing: border-box;
-                            padding: 1px;
-                            margin: 0 auto 2mm auto;
                         }
                         .brand-text {
                             font-size: 6px;
                             text-align: center;
                             flex: 0 0 auto;
-                            margin-right: 2px;
+                            margin-right: 1px;
                             writing-mode: horizontal-tb;
                             text-orientation: mixed;
                             transform: none;
                         }
                         .qr-code {
-                            width: 18mm;
-                            height: 18mm;
+                            width: 16mm;
+                            height: 16mm;
                             flex: 0 0 auto;
-                            margin-right: 2px;
+                            margin-right: 1px;
                         }
                         .text-container {
                             display: flex;
@@ -1168,13 +1179,13 @@ $(document).ready(function () {
                             flex: 1;
                         }
                         .code-text {
-                            font-size: 10px;
+                            font-size: 9px;
                             font-weight: bold;
                             text-align: center;
                             margin-bottom: 1px;
                         }
                         .description {
-                            font-size: 8px;
+                            font-size: 7px;
                             text-align: left;
                             word-wrap: break-word;
                             flex: 1;
