@@ -1150,7 +1150,7 @@ $(document).ready(function () {
                             width: 38mm;
                             height: 38mm;
                             box-sizing: border-box;
-                            border: none;
+                            border: 1px solid black;
                             display: flex;
                             flex-direction: row;
                             align-items: center;
