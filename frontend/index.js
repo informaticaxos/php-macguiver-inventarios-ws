@@ -1133,6 +1133,8 @@ $(document).ready(function () {
                             padding: 0;
                             width: 80mm;
                             height: 30mm;
+                            transform: rotate(-90deg);
+                            transform-origin: top left;
                         }
                         .label-container {
                             width: 78mm;
