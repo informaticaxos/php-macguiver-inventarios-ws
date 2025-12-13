@@ -58,11 +58,8 @@ class ProductService
             return null; // Code ya existe
         }
 
-        // Generar aux automáticamente: max_aux + 1
-        $maxAux = $this->getMaxAux() ?? 0;
-        $data['aux'] = (string)($maxAux + 1);
-
-        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], $data['aux'], $data['percha'] ?? '');
+        // aux se genera automáticamente por trigger en la base de datos
+        $product = new Product(null, $data['brand'] ?? '', $data['description'] ?? '', $data['stock'] ?? 0, $data['cost'] ?? 0.0, $data['pvp'] ?? 0.0, $data['min'] ?? 0, $data['code'], '', $data['percha'] ?? '');
         $this->repository->save($product);
         return $product;
     }
@@ -134,25 +131,13 @@ class ProductService
                     continue;
                 }
 
-                // Validar aux: debe ser string no vacío y único
-                if (!isset($productData['aux']) || !is_string($productData['aux']) || empty($productData['aux'])) {
-                    $errors[] = 'Invalid aux for product ' . $productData['code'] . ': must be non-empty string';
-                    continue;
-                }
-
-                // Verificar si aux ya existe
-                if ($this->repository->findByAux($productData['aux'])) {
-                    $errors[] = 'Aux ' . $productData['aux'] . ' already exists for product ' . $productData['code'];
-                    continue;
-                }
-
                 // Verificar si code ya existe
                 if ($this->repository->findByCode($productData['code'])) {
                     $errors[] = 'Code ' . $productData['code'] . ' already exists';
                     continue;
                 }
 
-                // Crear producto
+                // Crear producto (aux se genera por trigger)
                 $product = new Product(
                     null,
                     $productData['brand'] ?? '',
@@ -162,7 +147,7 @@ class ProductService
                     $productData['pvp'] ?? 0.0,
                     $productData['min'] ?? 0,
                     $productData['code'],
-                    $productData['aux'],
+                    '', // aux vacío, se genera por trigger
                     $productData['percha'] ?? ''
                 );
 
@@ -202,9 +187,6 @@ class ProductService
             return ['success' => false, 'message' => 'No products to import'];
         }
 
-        // Obtener el max aux actual para generar nuevos
-        $currentMaxAux = $this->getMaxAux() ?? 0;
-
         // Filtrar productos válidos y verificar duplicados
         $validProducts = [];
         $errors = [];
@@ -223,11 +205,7 @@ class ProductService
                     continue;
                 }
 
-                // Generar aux automáticamente: incrementar max_aux
-                $currentMaxAux++;
-                $aux = (string)$currentMaxAux;
-
-                // Agregar producto válido con aux generado
+                // Agregar producto válido (aux se genera por trigger)
                 $validProducts[] = [
                     'brand' => $productData['brand'] ?? '',
                     'description' => $productData['description'] ?? '',
@@ -236,7 +214,7 @@ class ProductService
                     'pvp' => $productData['pvp'] ?? 0.0,
                     'min' => $productData['min'] ?? 0,
                     'code' => $productData['code'],
-                    'aux' => $aux
+                    'percha' => $productData['percha'] ?? ''
                 ];
 
             } catch (Exception $e) {

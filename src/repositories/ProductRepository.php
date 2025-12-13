@@ -92,8 +92,8 @@ class ProductRepository
                 $product->getIdProduct()
             ]);
         } else {
-            // Insertar
-            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, aux, percha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            // Insertar (aux se genera por trigger)
+            $stmt = $this->pdo->prepare("INSERT INTO products (brand, description, stock, cost, pvp, min, code, percha) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $product->getBrand(),
                 $product->getDescription(),
@@ -102,7 +102,6 @@ class ProductRepository
                 $product->getPvp(),
                 $product->getMin(),
                 $product->getCode(),
-                $product->getAux(),
                 $product->getPercha()
             ]);
             $product->setIdProduct($this->pdo->lastInsertId());
