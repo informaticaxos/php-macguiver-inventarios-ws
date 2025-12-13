@@ -1118,7 +1118,7 @@ $(document).ready(function () {
     window.printLabel = function (code, description, brand) {
         var printWindow = window.open('', '_blank');
         var labelHtml = `<div class="label-container"><div class="inner-container"><div class="brand-text">${brand || ""}</div><canvas class="qr-code"></canvas><div class="text-container"><div class="code-text">COD: ${code}</div><div class="description">${description || ""}</div></div></div></div>`;
-        var repeatedLabels = labelHtml.repeat(5);
+        var repeatedLabels = labelHtml.repeat(2);
         var htmlContent = `
             <html>
             <head>
@@ -1141,7 +1141,7 @@ $(document).ready(function () {
                             height: 42mm;
                             box-sizing: border-box;
                             padding: 2px;
-                            margin-bottom: 2mm;
+                            margin-bottom: 0mm;
                             display: flex;
                             justify-content: center;
                             align-items: center;
